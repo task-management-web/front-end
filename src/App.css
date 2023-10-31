@@ -1,38 +1,50 @@
-.App {
-  text-align: center;
+input {
+  padding: 8px 16px;
+  border-radius: 8px;
+  outline: none;
+  border: 2px solid var(--light-gray);
+  font-size: 16px;
+  line-height: 24px;
+  transition: all 0.05s linear;
+  /* background: var(--lighter-gray); */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+input:focus {
+  outline-offset: -1px;
+  outline: 2px solid var(--dark-pink);
+  border: 2px solid transparent;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.helper-text {
+  color: var(--red);
+  font-size: small;
+  margin-top: 2px;
+  width: 100%;
+  transition: all 0.1s linear;
+  height: 17.6px;
+}
+.error-input, .error-input:focus {
+  outline-offset: -1px;
+  outline: 2px solid var(--red);
+  border: 2px solid transparent;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.fill-button {
+  background-color: var(--dark-pink);
   color: white;
+  border: none;
+    outline: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 16px;
+    line-height: 24px;
 }
 
-.App-link {
-  color: #61dafb;
+.sign-up-text {
+  text-align: center;
+  margin-bottom: 24px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.link-text {
+  color: var(--dark-pink);
 }

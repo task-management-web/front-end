@@ -1,0 +1,21 @@
+.text-field {
+  display: grid;
+  width: 100%;
+  gap: 2px;
+  transition: all 300ms linear;
+}
+
+.label {
+  display: flex;
+  justify-content: left;
+  gap: 6px;
+}
+
+.require-text {
+  color: var(--red);
+}
+
+input {
+  width: -webkit-fill-available;
+  max-width: none;
+}
