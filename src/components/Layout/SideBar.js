@@ -73,7 +73,7 @@ const SideBar = () => {
 						onClick={() => setOpenAddBoard(false)}
 					/>
 				</div>
-				<AddBoard />
+				<AddBoard closeModal={() => setOpenAddBoard(false)} />
 			</Popup>
 		</div>
 	);

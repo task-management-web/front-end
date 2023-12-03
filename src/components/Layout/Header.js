@@ -1,5 +1,6 @@
 import React from "react";
 import DropDown from "../base/DropDown";
+import { Link } from "react-router-dom";
 
 const Header = () => {
 	return (
@@ -7,7 +8,7 @@ const Header = () => {
 			<div className='leading-8 font-bold'>CongheWeb</div>
 			<DropDown
 				buttonElement={
-					<div className='w-8 h-8 rounded-full bg-blue-400 text-center leading-8 hover:scale-110 font-bold'>
+					<div className='w-8 h-8 rounded-full bg-blue-400 text-blue-800 text-center leading-8 hover:scale-110 font-bold'>
 						H
 					</div>
 				}
@@ -19,7 +20,7 @@ const Header = () => {
 								Tài khoản
 							</p>
 							<div className='flex gap-4'>
-								<div className='w-12 h-12 min-w-[48px] rounded-full text-lg bg-blue-400 text-center leading-[48px] font-bold'>
+								<div className='w-12 h-12 min-w-[48px] rounded-full text-lg text-blue-800 bg-blue-400 text-center leading-[48px] font-bold'>
 									H
 								</div>
 								<div className='text-sm'>
@@ -32,9 +33,13 @@ const Header = () => {
 								</div>
 							</div>
 						</div>
-						<div className='px-4 py-2 hover:bg-gray-100 cursor-pointer'>
-							Thông tin cá nhân
-						</div>
+
+						<Link to='/manage-account'>
+							<div className='px-4 py-2 hover:bg-gray-100 cursor-pointer'>
+								Quản lý tài khoản
+							</div>
+						</Link>
+
 						<div className='px-4 py-2 hover:bg-gray-100 cursor-pointer'>
 							Đăng xuất
 						</div>

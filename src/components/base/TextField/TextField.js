@@ -17,6 +17,7 @@ const TextField = ({
 	type = "text",
 	className,
 	isMultiLine,
+	hiddenHelperText,
 }) => {
 	return (
 		<div className={clsx("text-field", className)} style={style}>
@@ -26,7 +27,7 @@ const TextField = ({
 					{required && <span className='require-text'>*</span>}
 				</div>
 			)}
-			<div>
+			<div className='min-width-fill-available'>
 				{!isMultiLine ? (
 					<input
 						placeholder={placeholder}
@@ -49,7 +50,9 @@ const TextField = ({
 						className={helperText ? "error-input" : ""}
 					/>
 				)}
-				<div className='helper-text'>{helperText}</div>
+				<div className={clsx("helper-text", hiddenHelperText ? "hidden" : "")}>
+					{helperText}
+				</div>
 			</div>
 		</div>
 	);

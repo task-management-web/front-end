@@ -1,5 +1,6 @@
 import React from "react";
 import List from "../../components/List";
+import AddList from "../../components/AddList";
 // import Header from "../../components/Layout/Header";
 // import SideBar from "../../components/Layout/SideBar";
 // import Main from "./Main/Main";
@@ -22,6 +23,7 @@ const Home = () => {
 				<List />
 				<List />
 				<List />
+				<AddList />
 			</div>
 		</div>
 	);
