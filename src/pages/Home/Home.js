@@ -1,7 +1,10 @@
 import React from "react";
-import List from "./List";
+import List from "../../components/List";
+// import Header from "../../components/Layout/Header";
+// import SideBar from "../../components/Layout/SideBar";
+// import Main from "./Main/Main";
 
-const Main = () => {
+const Home = () => {
 	return (
 		<div className='overflow-auto'>
 			<div className='bg-white bg-opacity-40 p-4 fixed fill-available'>
@@ -24,4 +27,4 @@ const Main = () => {
 	);
 };
 
-export default Main;
+export default Home;

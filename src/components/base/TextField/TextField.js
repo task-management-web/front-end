@@ -16,6 +16,7 @@ const TextField = ({
 	inputStyle,
 	type = "text",
 	className,
+	isMultiLine,
 }) => {
 	return (
 		<div className={clsx("text-field", className)} style={style}>
@@ -26,16 +27,28 @@ const TextField = ({
 				</div>
 			)}
 			<div>
-				<input
-					placeholder={placeholder}
-					value={value}
-					onChange={onChange}
-					disabled={disabled}
-					readOnly={readOnly}
-					style={inputStyle}
-					className={helperText ? "error-input" : ""}
-					type={type}
-				/>
+				{!isMultiLine ? (
+					<input
+						placeholder={placeholder}
+						value={value}
+						onChange={onChange}
+						disabled={disabled}
+						readOnly={readOnly}
+						style={inputStyle}
+						className={helperText ? "error-input" : ""}
+						type={type}
+					/>
+				) : (
+					<textarea
+						placeholder={placeholder}
+						value={value}
+						onChange={onChange}
+						disabled={disabled}
+						readOnly={readOnly}
+						style={inputStyle}
+						className={helperText ? "error-input" : ""}
+					/>
+				)}
 				<div className='helper-text'>{helperText}</div>
 			</div>
 		</div>

@@ -1,11 +1,13 @@
 import React from "react";
 import styles from "./SignUp.module.css";
-import TextField from "../base/TextField/TextField";
+import TextField from "../../components/base/TextField/TextField";
 import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import clsx from "clsx";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { API } from "../../utils/api";
+import { toast } from "react-toastify";
 
 const SignUpSchema = yup.object().shape({
 	fullName: yup.string().required("Bạn chưa nhập họ tên"),
@@ -36,21 +38,48 @@ const SignUpSchema = yup.object().shape({
 });
 
 export const SignUp = () => {
+	const navigate = useNavigate();
 	const {
 		handleSubmit,
 		control,
+		setError,
 		formState: { errors },
 	} = useForm({
 		resolver: yupResolver(SignUpSchema),
 		defaultValues: {
 			fullName: "",
 			email: "",
+			userName: "",
+			password: "",
+			confirmPassword: "",
 		},
 	});
 
 	const onSubmit = (data) => {
-		console.log(data);
+		if (data.password !== data.confirmPassword) {
+			setError("confirmPassword", {
+				message: "Xác nhận mật khẩu không đúng",
+			});
+			return;
+		}
+		const params = Object.assign({}, data);
+		delete params.confirmPassword;
+		signUpApi(params);
 	};
+
+	const signUpApi = (data) => {
+		API.post("/users/", data)
+			.then((data) => {
+				console.log(data);
+				toast.success(data.data?.message);
+				navigate("sign-in");
+			})
+			.catch((err) => {
+				console.error(err);
+				toast.error(err.response.data?.message);
+			});
+	};
+
 	return (
 		<div className={styles.background}>
 			<div className={styles.container}>
@@ -124,7 +153,7 @@ export const SignUp = () => {
 							<TextField
 								label='Xác nhận mật khẩu'
 								required={true}
-								helperText={errors.confỉmPassword?.message}
+								helperText={errors.confirmPassword?.message}
 								value={field.value}
 								onChange={(e) => field.onChange(e.target.value)}
 								labelStyle={{ fontSize: "small" }}

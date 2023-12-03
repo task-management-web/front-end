@@ -1,7 +1,9 @@
 import React from "react";
-import { ChevronRightIcon, PlusIcon } from "@heroicons/react/outline";
+import { ChevronRightIcon, PlusIcon, XIcon } from "@heroicons/react/outline";
 import { useState } from "react";
 import clsx from "clsx";
+import Popup from "reactjs-popup";
+import AddBoard from "../AddBoard";
 
 const ListBoard = [
 	{
@@ -21,6 +23,7 @@ const ListBoard = [
 
 const SideBar = () => {
 	const [isOpen, setIsOpen] = useState(true);
+	const [openAddBoard, setOpenAddBoard] = useState(false);
 	return (
 		<div
 			className={clsx(
@@ -46,7 +49,10 @@ const SideBar = () => {
 			>
 				<div className='px-4 py-2 text-sm font-semibold flex justify-between'>
 					Bảng
-					<button className='w-6 h-6 rounded-md hover:bg-gray-100 p-1 font-normal'>
+					<button
+						className='w-6 h-6 rounded-md hover:bg-gray-100 p-1 font-normal'
+						onClick={() => setOpenAddBoard(true)}
+					>
 						<PlusIcon />
 					</button>
 				</div>
@@ -59,6 +65,16 @@ const SideBar = () => {
 					</div>
 				))}
 			</div>
+			<Popup open={openAddBoard} closeOnDocumentClick={false}>
+				<div className='flex justify-between gap-2 px-8 pt-6 pb-4'>
+					<span className='font-semibold'>Thêm bảng mới</span>
+					<XIcon
+						className='cursor-pointer w-6 h-6 p-[2px]'
+						onClick={() => setOpenAddBoard(false)}
+					/>
+				</div>
+				<AddBoard />
+			</Popup>
 		</div>
 	);
 };

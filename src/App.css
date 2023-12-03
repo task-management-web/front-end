@@ -6,10 +6,24 @@ input {
 	font-size: 16px;
 	line-height: 24px;
 	transition: all 0.05s linear;
-	/* background: var(--lighter-gray); */
 }
 
 input:focus {
+	outline-offset: -1px;
+	outline: 2px solid var(--dark-pink);
+	border: 2px solid transparent;
+}
+
+textarea {
+	padding: 8px 16px;
+	border-radius: 8px;
+	outline: none;
+	border: 2px solid var(--light-gray);
+	font-size: 16px;
+	min-height: 40px;
+}
+
+textarea:focus {
 	outline-offset: -1px;
 	outline: 2px solid var(--dark-pink);
 	border: 2px solid transparent;
@@ -52,4 +66,27 @@ input:focus {
 
 .fill-available {
 	width: -webkit-fill-available;
+}
+
+.popup-content {
+	margin: auto;
+	background: rgb(255, 255, 255);
+	border-radius: 8px;
+}
+
+.popup-arrow {
+	color: rgb(255, 255, 255);
+}
+
+[role="tooltip"].popup-content {
+	width: 200px;
+	box-shadow: rgba(0, 0, 0, 0.16) 0px 0px 3px;
+}
+
+.popup-overlay {
+	background: rgba(0, 0, 0, 0.5);
+}
+
+[data-popup="tooltip"].popup-overlay {
+	background: transparent;
 }

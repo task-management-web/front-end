@@ -1,10 +1,12 @@
 import React from "react";
 import styles from "./SignIn.module.css";
-import TextField from "../base/TextField/TextField";
+import TextField from "../../components/base/TextField/TextField";
 import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { API } from "../../utils/api";
+import { toast } from "react-toastify";
 
 const SignInSchema = yup.object().shape({
 	userName: yup
@@ -22,20 +24,34 @@ const SignInSchema = yup.object().shape({
 });
 
 export const SignIn = () => {
+	const navigate = useNavigate();
 	const {
 		handleSubmit,
 		control,
 		formState: { errors },
 	} = useForm({
 		resolver: yupResolver(SignInSchema),
+		defaultValues: {
+			userName: "",
+			password: "",
+		},
 	});
 
 	const onSubmit = (data) => {
-		console.log(data);
+		API.post("/auth/login", data)
+			.then((res) => {
+				toast.success("Đăng nhập thành công");
+				navigate("/");
+				localStorage.setItem("token", res.data.token);
+			})
+			.catch((err) => {
+				toast.error(err.response.data?.message || "Đăng nhập thất bại");
+				console.log(err);
+			});
 	};
 	return (
 		<div className={styles.background}>
-			<div className={styles.container}>
+			<div className={styles.signInContainer}>
 				<div className='sign-up-text'>
 					<h2>Đăng nhập</h2>
 					<span>Hãy đăng nhập để tiếp tục sử dụng</span>
@@ -76,7 +92,7 @@ export const SignIn = () => {
 						</Link>
 					</div>
 					<button
-						className='fill-button'
+						className='fill-button w-full'
 						style={{ marginTop: "16px" }}
 						onClick={handleSubmit(onSubmit)}
 					>
