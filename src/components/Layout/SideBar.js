@@ -1,29 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ChevronRightIcon, PlusIcon, XIcon } from "@heroicons/react/outline";
 import { useState } from "react";
 import clsx from "clsx";
 import Popup from "reactjs-popup";
 import AddBoard from "../AddBoard";
-
-const ListBoard = [
-	{
-		id: "1",
-		title: "abc",
-	},
-	{
-		id: "2",
-
-		title: "abc",
-	},
-	{
-		id: "3",
-		title: "abshhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhc",
-	},
-];
+import { API } from "../../utils/api";
+import { toast } from "react-toastify";
 
 const SideBar = () => {
 	const [isOpen, setIsOpen] = useState(true);
 	const [openAddBoard, setOpenAddBoard] = useState(false);
+	const [boardsList, setBoardsList] = useState([]);
+
+	useEffect(() => {
+		console.log("a");
+		API.get("/boards/")
+			.then((res) => {
+				console.log(res);
+				setBoardsList(res.data?.data);
+			})
+			.catch((err) => {
+				toast.error(err.response.data?.message);
+				console.log(err);
+			});
+	}, []);
 	return (
 		<div
 			className={clsx(
@@ -56,7 +56,7 @@ const SideBar = () => {
 						<PlusIcon />
 					</button>
 				</div>
-				{ListBoard.map((e) => (
+				{boardsList.map((e) => (
 					<div
 						key={e.id}
 						className='hover:bg-gray-100 px-4 py-2 text-ellipsis block whitespace-nowrap w-[300px] overflow-hidden cursor-pointer'

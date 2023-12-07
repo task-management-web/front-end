@@ -7,9 +7,10 @@ function DropDown({
 	itemsElement,
 	classNameButton,
 	classNameItems,
+	className,
 }) {
 	return (
-		<div className='relative w-fit h-fit'>
+		<div className={clsx("relative w-fit h-fit", className)}>
 			<Menu>
 				<Menu.Button className={clsx("py-1 px-2 rounded-md", classNameButton)}>
 					{buttonElement}
@@ -24,7 +25,7 @@ function DropDown({
 				>
 					<Menu.Items
 						className={clsx(
-							"z-10 bg-white absolute right-0 w-56 mt-2 origin-top-right rounded-md shadow-sm ring-2 ring-black ring-opacity-5 focus:outline-none",
+							"z-10 bg-white absolute w-56 mt-2 origin-top-right rounded-md shadow-sm ring-2 ring-black ring-opacity-5 focus:outline-none",
 							classNameItems
 						)}
 					>

@@ -39,7 +39,7 @@ const Header = () => {
 						{userInfo.userName?.split("")[0] || ""}
 					</div>
 				}
-				classNameItems={"py-2 w-[250px]"}
+				classNameItems={"py-2 w-[250px] right-0"}
 				itemsElement={
 					<>
 						<div className='px-4 py-2'>

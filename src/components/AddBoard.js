@@ -4,6 +4,8 @@ import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import clsx from "clsx";
+import { API } from "../utils/api";
+import { toast } from "react-toastify";
 
 const Schema = yup.object().shape({
 	title: yup.string().required("Bạn chưa nhập tiêu đề"),
@@ -42,6 +44,12 @@ const AddBoard = ({ closeModal, defaultData = {} }) => {
 
 	const onSubmit = (data) => {
 		console.log(data);
+		API.post("/boards/", data)
+			.then((res) => {
+				closeModal();
+				toast.success(res.data.message);
+			})
+			.catch((err) => toast.error(err.response.data?.message));
 	};
 	return (
 		<div className='w-[50vw] px-8 pb-4 pt-0 max-h-[80vh] overflow-auto'>
