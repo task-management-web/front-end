@@ -21,3 +21,7 @@ textarea {
 	width: -webkit-fill-available;
 	max-width: none;
 }
+
+input:disabled {
+	background-color: var(--light-gray);
+}

@@ -129,3 +129,43 @@ textarea:focus {
 	color: white;
 	border-radius: 8px;
 }
+
+.select-box__control {
+	border-radius: 8px !important;
+	display: flex;
+	flex: 1;
+}
+
+.select-box__control input {
+	--tw-ring-offset-width: 0 !important;
+}
+
+.select-box__value-container {
+	padding: 4px 8px !important;
+}
+
+.select-box__control:focus-within {
+	border-color: var(--dark-pink) !important;
+	box-shadow: 0 0 0 1px var(--dark-pink) !important;
+}
+
+.select-box--is-disabled,
+.css-3iigni-container,
+.css-b62m3t-container {
+	display: flex;
+	flex: 1;
+}
+
+.css-16xfy0z-control {
+	border: 1px solid #d1d5db !important;
+	background-color: #f3f4f6 !important;
+	color: #6b7280 !important;
+}
+
+.select-box__option--is-focused {
+	background-color: var(--lighter-pink) !important;
+}
+
+.select-box__option--is-selected {
+	background-color: var(--dark-pink) !important;
+}

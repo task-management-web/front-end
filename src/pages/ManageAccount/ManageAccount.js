@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ExpandPanel from "../../components/base/ExpandPanel";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import TextField from "../../components/base/TextField/TextField";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { API } from "../../utils/api";
+import { toast } from "react-toastify";
+import ConfirmDialog from "../../components/base/ConfirmDialog";
+import { useNavigate } from "react-router-dom";
 
 const InfoSchema = yup.object().shape({
 	fullName: yup.string().required("Bạn chưa nhập họ tên"),
@@ -57,6 +61,75 @@ const ManageAccount = () => {
 		},
 	});
 	const [isEditting, setIsEditting] = useState(false);
+	const [openDelete, setOpenDelete] = useState(false);
+	const [userInfo, setUserInfo] = useState();
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		API.get("/users/")
+			.then((data) => {
+				setUserInfo(data.data);
+				infoForm.setValue("fullName", data.data?.fullName);
+				infoForm.setValue("userName", data.data?.userName);
+				infoForm.setValue("email", data.data?.email);
+			})
+			.catch((err) =>
+				toast.error(
+					err.response.data?.message || "Tải thông tin người dùng thất bại"
+				)
+			);
+	}, [infoForm]);
+
+	const onCancelUpdate = () => {
+		infoForm.setValue("fullName", userInfo?.fullName);
+		infoForm.setValue("userName", userInfo?.userName);
+		infoForm.setValue("email", userInfo?.email);
+	};
+
+	const onDeleteAccount = () => {
+		API.delete("/users")
+			.then((data) => {
+				toast.success(data.data.message || "Xoá tài khoản thành công");
+				navigate("/sign-in");
+			})
+			.catch((err) =>
+				toast.error(
+					err.response.data?.message || "Tải thông tin người dùng thất bại"
+				)
+			);
+	};
+
+	const onUpdateAccount = (data) => {
+		API.put("/users", { fullName: data.fullName })
+			.then((res) => {
+				setIsEditting(false);
+				toast.success(res.data.message);
+			})
+			.catch((err) => toast.error(err.response.data?.message));
+	};
+
+	const onChangePassword = (data) => {
+		console.log(data);
+		if (data.newPassword !== data.confirmPassword) {
+			changePasswordForm.setError("confirmPassword", {
+				message: "Xác nhận mật khẩu không đúng",
+			});
+			return;
+		}
+		API.put("users/change-password", data)
+			.then((res) => {
+				clearChangePasswordForm();
+				toast.success(res.data.message);
+			})
+			.catch((err) => toast.error(err.response.data?.message));
+	};
+
+	const clearChangePasswordForm = () => {
+		changePasswordForm.setValue("oldPassword", "");
+		changePasswordForm.setValue("newPassword", "");
+		changePasswordForm.setValue("confirmPassword", "");
+	};
+
 	return (
 		<div className='p-4 w-full grid h-fit gap-4'>
 			<ExpandPanel
@@ -97,7 +170,7 @@ const ManageAccount = () => {
 											value={field.value}
 											onChange={(e) => field.onChange(e.target.value)}
 											labelStyle={{ fontSize: "small" }}
-											disabled={!isEditting}
+											disabled={true}
 										/>
 									)}
 								/>
@@ -112,7 +185,7 @@ const ManageAccount = () => {
 											value={field.value}
 											onChange={(e) => field.onChange(e.target.value)}
 											labelStyle={{ fontSize: "small" }}
-											disabled={!isEditting}
+											disabled={true}
 										/>
 									)}
 								/>
@@ -123,15 +196,26 @@ const ManageAccount = () => {
 								<>
 									<button
 										className='stroke-button w-[150px]'
-										onClick={() => setIsEditting(false)}
+										onClick={() => {
+											setIsEditting(false);
+											onCancelUpdate();
+										}}
 									>
 										Huỷ
 									</button>
-									<button className='fill-button w-[150px]'>Lưu</button>
+									<button
+										className='fill-button w-[150px]'
+										onClick={infoForm.handleSubmit(onUpdateAccount)}
+									>
+										Lưu
+									</button>
 								</>
 							) : (
 								<>
-									<button className='delete-button w-[150px]'>
+									<button
+										className='delete-button w-[150px]'
+										onClick={() => setOpenDelete(true)}
+									>
 										Xoá tài khoản
 									</button>
 									<button
@@ -165,6 +249,7 @@ const ManageAccount = () => {
 											value={field.value}
 											onChange={(e) => field.onChange(e.target.value)}
 											labelStyle={{ fontSize: "small" }}
+											type='password'
 										/>
 									)}
 								/>
@@ -181,6 +266,7 @@ const ManageAccount = () => {
 											value={field.value}
 											onChange={(e) => field.onChange(e.target.value)}
 											labelStyle={{ fontSize: "small" }}
+											type='password'
 										/>
 									)}
 								/>
@@ -198,6 +284,7 @@ const ManageAccount = () => {
 											value={field.value}
 											onChange={(e) => field.onChange(e.target.value)}
 											labelStyle={{ fontSize: "small" }}
+											type='password'
 										/>
 									)}
 								/>
@@ -206,14 +293,28 @@ const ManageAccount = () => {
 						<div className='flex gap-2 justify-end'>
 							<button
 								className='stroke-button w-[150px]'
-								onClick={() => setIsEditting(false)}
+								onClick={() => clearChangePasswordForm()}
 							>
 								Huỷ
 							</button>
-							<button className='fill-button w-[150px]'>Lưu</button>
+							<button
+								className='fill-button w-[150px]'
+								onClick={changePasswordForm.handleSubmit(onChangePassword)}
+							>
+								Lưu
+							</button>
 						</div>
 					</>
 				}
+			/>
+			<ConfirmDialog
+				open={openDelete}
+				onClickNo={() => setOpenDelete(false)}
+				onClickYes={() => {
+					setOpenDelete(false);
+					onDeleteAccount();
+				}}
+				title={"Bạn chắc chắn muốn xoá tài khoản này"}
 			/>
 		</div>
 	);

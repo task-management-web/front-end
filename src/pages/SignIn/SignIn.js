@@ -9,10 +9,7 @@ import { API } from "../../utils/api";
 import { toast } from "react-toastify";
 
 const SignInSchema = yup.object().shape({
-	userName: yup
-		.string()
-		.required("Bạn chưa nhập tên đăng nhập")
-		.matches(/^(\w|_)*$/, "Tên đăng nhập chỉ chứa chữ cái, chữ số và kí tự _"),
+	userName: yup.string().required("Bạn chưa nhập tên đăng nhập"),
 	password: yup
 		.string()
 		.required("Bạn chưa nhập mật khẩu")
