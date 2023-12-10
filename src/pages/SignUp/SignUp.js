@@ -8,8 +8,8 @@ import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import clsx from 'clsx';
 import { Link, useNavigate } from 'react-router-dom';
-import { API } from '../../utils/api';
-import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { signUp } from '../../actions/auth';
 
 const SignUpSchema = yup.object().shape({
 	fullName: yup.string().required('Bạn chưa nhập họ tên'),
@@ -41,6 +41,7 @@ const SignUpSchema = yup.object().shape({
 
 export const SignUp = () => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const {
 		handleSubmit,
 		control,
@@ -70,16 +71,7 @@ export const SignUp = () => {
 	};
 
 	const signUpApi = (data) => {
-		API.post('/users/', data)
-			.then((data) => {
-				console.log(data);
-				toast.success(data.data?.message);
-				navigate('sign-in');
-			})
-			.catch((err) => {
-				console.error(err);
-				toast.error(err.response.data?.message);
-			});
+		dispatch(signUp(data, navigate));
 	};
 
 	return (

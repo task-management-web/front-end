@@ -1,35 +1,22 @@
 /** @format */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import DropDown from '../base/DropDown';
 import { Link, useNavigate } from 'react-router-dom';
-import { API } from './../../utils/api';
-import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserInfo, logOut } from '../../actions/auth';
 
 const Header = () => {
 	const navigate = useNavigate();
-	const [userInfo, setUserInfo] = useState({
-		userName: '',
-		email: '',
-	});
+	const dispatch = useDispatch();
+	const user = useSelector((state) => state.auth);
 
 	useEffect(() => {
-		API.get('/users')
-			.then((data) => {
-				setUserInfo(data?.data);
-			})
-			.catch((err) => {
-				console.log(err);
-				toast.error('Tải thông tin người dùng thất bại');
-			});
-	}, []);
+		dispatch(getUserInfo());
+	}, [dispatch]);
 
 	const onLogout = () => {
-		API.post('/users/logout')
-			.then((data) => console.log(data))
-			.catch((err) => console.log(err));
-		localStorage.removeItem('token');
-		navigate('/sign-in');
+		dispatch(logOut(navigate));
 	};
 
 	return (
@@ -38,7 +25,7 @@ const Header = () => {
 			<DropDown
 				buttonElement={
 					<div className='w-8 h-8 rounded-full bg-blue-400 text-blue-800 text-center leading-8 hover:scale-110 font-bold'>
-						{userInfo.userName?.split('')[0] || ''}
+						{user?.userName?.split('')[0] || ''}
 					</div>
 				}
 				classNameItems={'py-2 w-[250px] right-0'}
@@ -50,14 +37,14 @@ const Header = () => {
 							</p>
 							<div className='flex gap-4'>
 								<div className='w-12 h-12 min-w-[48px] rounded-full text-lg text-blue-800 bg-blue-400 text-center leading-[48px] font-bold'>
-									{userInfo.userName?.split('')[0] || ''}
+									{user?.userName?.split('')[0] || ''}
 								</div>
 								<div className='text-sm'>
 									<div className='block text-ellipsis overflow-hidden w-[154px]'>
-										{userInfo.userName}
+										{user?.userName}
 									</div>
 									<div className='block text-ellipsis overflow-hidden w-[154px]'>
-										{userInfo.email}
+										{user?.email}
 									</div>
 								</div>
 							</div>

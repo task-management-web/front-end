@@ -1,7 +1,9 @@
-import React from "react";
-import "./TextField/TextField.css";
-import clsx from "clsx";
-import Select from "react-select";
+/** @format */
+
+import React from 'react';
+import './TextField/TextField.css';
+import clsx from 'clsx';
+import Select from 'react-select';
 
 const SelectBox = ({
 	required,
@@ -21,7 +23,9 @@ const SelectBox = ({
 	isMulti,
 }) => {
 	return (
-		<div className={clsx("text-field", className)} style={style}>
+		<div
+			className={clsx('text-field', className)}
+			style={style}>
 			{label && (
 				<div className='label'>
 					<span style={labelStyle}>{label}</span>
@@ -30,18 +34,18 @@ const SelectBox = ({
 			)}
 			<div className='min-width-fill-available'>
 				<Select
-					classNamePrefix={"select-box"}
+					classNamePrefix={'select-box'}
 					isMulti={isMulti}
 					options={options}
 					placeholder={placeholder}
-					value={value}
+					value={options.filter((e) => e.value === value)}
 					onChange={onChange}
 					getOptionLabel={getOptionLabel}
 					getOptionValue={getOptionValue}
 					isDisabled={disabled}
 				/>
 
-				<div className={clsx("helper-text", hiddenHelperText ? "hidden" : "")}>
+				<div className={clsx('helper-text', hiddenHelperText ? 'hidden' : '')}>
 					{helperText}
 				</div>
 			</div>

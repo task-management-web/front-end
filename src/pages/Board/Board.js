@@ -7,30 +7,30 @@ import { useLocation } from 'react-router-dom';
 import { API } from '../../utils/api';
 import { InformationCircleIcon } from '@heroicons/react/outline';
 import BoardDetail from '../../components/Layout/BoardDetail';
+import { useDispatch, useSelector } from 'react-redux';
+import { getBoard } from './../../actions/board';
 
 const Board = () => {
 	const location = useLocation();
 	const boardId = location.pathname.split('/')[2];
-	const [boardInfo, setBoardInfo] = useState({});
+	// const [boardInfo, setBoardInfo] = useState({});
+	const dispatch = useDispatch();
+	const boardInfo = useSelector((state) => state.board);
 	const [lists, setList] = useState([]);
 	const [openDetail, setOpenDetail] = useState(false);
 
 	useEffect(() => {
-		API.get(`/boards/${boardId}`)
-			.then((data) => {
-				setBoardInfo(data.data);
-			})
-			.catch((err) => console.log(err));
+		dispatch(getBoard(boardId));
 
-		API.post('/list/getListsByBoardId/', { boardId: Number(boardId) })
-			.then((res) => {
-				setList(res.data);
-			})
-			.catch((err) => {});
-	}, [boardId]);
+		// API.post('/list/getListsByBoardId/', { boardId: Number(boardId) })
+		// 	.then((res) => {
+		// 		setList(res.data);
+		// 	})
+		// 	.catch((err) => {});
+	}, [boardId, dispatch]);
 
 	return (
-		<div className='flex w-full'>
+		<div className='flex w-full overflow-auto'>
 			<div className='overflow-auto w-full'>
 				<div className='bg-white bg-opacity-40 p-4 w-full'>
 					<div className='text-lg font-bold text-gray-700 flex justify-between'>

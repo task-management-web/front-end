@@ -7,8 +7,8 @@ import * as yup from 'yup';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Link, useNavigate } from 'react-router-dom';
-import { API } from '../../utils/api';
-import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { signIn } from '../../actions/auth';
 
 const SignInSchema = yup.object().shape({
 	userName: yup.string().required('Bạn chưa nhập tên đăng nhập'),
@@ -24,6 +24,7 @@ const SignInSchema = yup.object().shape({
 
 export const SignIn = () => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const {
 		handleSubmit,
 		control,
@@ -37,16 +38,7 @@ export const SignIn = () => {
 	});
 
 	const onSubmit = (data) => {
-		API.post('/auth/login', data)
-			.then((res) => {
-				toast.success('Đăng nhập thành công');
-				navigate('/');
-				localStorage.setItem('token', res?.data?.token);
-			})
-			.catch((err) => {
-				toast.error(err?.response.data?.message || 'Đăng nhập thất bại');
-				console.log(err);
-			});
+		dispatch(signIn(data, navigate));
 	};
 	return (
 		<div className={styles.background}>

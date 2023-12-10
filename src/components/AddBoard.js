@@ -6,8 +6,9 @@ import * as yup from 'yup';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import clsx from 'clsx';
-import { API } from '../utils/api';
-import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import { addBoard, updateBoard } from '../actions/board';
+import { getAllBoards } from '../actions/boards';
 
 const Schema = yup.object().shape({
 	title: yup.string().required('Bạn chưa nhập tiêu đề'),
@@ -30,7 +31,8 @@ const BackgroundColorList = [
 	'#16a34a',
 ];
 
-const AddBoard = ({ closeModal, defaultData = {}, getAllBoards }) => {
+const AddBoard = ({ closeModal, type = 'ADD' }) => {
+	const board = useSelector((state) => state.board);
 	const {
 		control,
 		handleSubmit,
@@ -38,20 +40,21 @@ const AddBoard = ({ closeModal, defaultData = {}, getAllBoards }) => {
 	} = useForm({
 		resolver: yupResolver(Schema),
 		defaultValues: {
-			title: '',
-			description: '',
-			backgroundUrl: '#f43f5e',
+			title: type === 'UPDATE' ? board.title : '',
+			description: type === 'UPDATE' ? board.description || '' : '',
+			backgroundUrl: type === 'UPDATE' ? board.backgroundUrl : '#f43f5e',
 		},
 	});
 
+	const dispatch = useDispatch();
+
 	const onSubmit = (data) => {
-		console.log(data);
-		API.post('/boards/', data)
-			.then((res) => {
-				closeModal();
-				toast.success(res.data?.message);
-			})
-			.catch((err) => toast.error(err.response.data?.message));
+		if (type === 'ADD')
+			dispatch(addBoard(data, closeModal, () => dispatch(getAllBoards())));
+		else
+			dispatch(
+				updateBoard(board.id, data, closeModal, () => dispatch(getAllBoards()))
+			);
 	};
 	return (
 		<div className='w-[50vw] px-8 pb-4 pt-0 max-h-[80vh] overflow-auto'>

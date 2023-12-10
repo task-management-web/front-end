@@ -6,10 +6,15 @@ import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import TextField from '../../components/base/TextField/TextField';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { API } from '../../utils/api';
-import { toast } from 'react-toastify';
 import ConfirmDialog from '../../components/base/ConfirmDialog';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	changePassword,
+	deleteUser,
+	getUserInfo,
+	updateUser,
+} from '../../actions/auth';
 
 const InfoSchema = yup.object().shape({
 	fullName: yup.string().required('Bạn chưa nhập họ tên'),
@@ -64,23 +69,26 @@ const ManageAccount = () => {
 	});
 	const [isEditting, setIsEditting] = useState(false);
 	const [openDelete, setOpenDelete] = useState(false);
-	const [userInfo, setUserInfo] = useState();
+	// const [userInfo, setUserInfo] = useState();
 	const navigate = useNavigate();
+	const userInfo = useSelector((state) => state.auth);
+	const dispatch = useDispatch();
 
 	useEffect(() => {
-		API.get('/users/')
-			.then((data) => {
-				setUserInfo(data?.data);
-				infoForm.setValue('fullName', data?.data?.fullName);
-				infoForm.setValue('userName', data?.data?.userName);
-				infoForm.setValue('email', data?.data?.email);
-			})
-			.catch((err) =>
-				toast.error(
-					err.response.data?.message || 'Tải thông tin người dùng thất bại'
-				)
-			);
-	}, [infoForm]);
+		// API.get('/users/')
+		// 	.then((data) => {
+		// 		setUserInfo(data?.data);
+		// 		infoForm.setValue('fullName', data?.data?.fullName);
+		// 		infoForm.setValue('userName', data?.data?.userName);
+		// 		infoForm.setValue('email', data?.data?.email);
+		// 	})
+		// 	.catch((err) =>
+		// 		toast.error(
+		// 			err.response.data?.message || 'Tải thông tin người dùng thất bại'
+		// 		)
+		// 	);
+		dispatch(getUserInfo());
+	}, [dispatch]);
 
 	const onCancelUpdate = () => {
 		infoForm.setValue('fullName', userInfo?.fullName);
@@ -88,26 +96,20 @@ const ManageAccount = () => {
 		infoForm.setValue('email', userInfo?.email);
 	};
 
+	useEffect(() => {
+		infoForm.setValue('fullName', userInfo?.fullName);
+		infoForm.setValue('userName', userInfo?.userName);
+		infoForm.setValue('email', userInfo?.email);
+	}, [userInfo, infoForm]);
+
 	const onDeleteAccount = () => {
-		API.delete('/users')
-			.then((data) => {
-				toast.success(data?.data?.message || 'Xoá tài khoản thành công');
-				navigate('/sign-in');
-			})
-			.catch((err) =>
-				toast.error(
-					err?.response.data?.message || 'Tải thông tin người dùng thất bại'
-				)
-			);
+		dispatch(deleteUser(navigate));
 	};
 
 	const onUpdateAccount = (data) => {
-		API.put('/users', { fullName: data?.fullName })
-			.then((res) => {
-				setIsEditting(false);
-				toast.success(res?.data?.message);
-			})
-			.catch((err) => toast.error(err?.response.data?.message));
+		dispatch(
+			updateUser({ fullName: data.fullName }, () => setIsEditting(false))
+		);
 	};
 
 	const onChangePassword = (data) => {
@@ -118,12 +120,7 @@ const ManageAccount = () => {
 			});
 			return;
 		}
-		API.put('users/change-password', data)
-			.then((res) => {
-				clearChangePasswordForm();
-				toast.success(res?.data?.message);
-			})
-			.catch((err) => toast.error(err?.response.data?.message));
+		dispatch(changePassword(data, clearChangePasswordForm));
 	};
 
 	const clearChangePasswordForm = () => {

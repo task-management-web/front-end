@@ -6,30 +6,21 @@ import { useState } from 'react';
 import clsx from 'clsx';
 import Popup from 'reactjs-popup';
 import AddBoard from '../AddBoard';
-import { API } from '../../utils/api';
-import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllBoards } from '../../actions/boards';
 
 const SideBar = () => {
 	const [isOpen, setIsOpen] = useState(true);
 	const [openAddBoard, setOpenAddBoard] = useState(false);
-	const [boardsList, setBoardsList] = useState([]);
+	const boards = useSelector((state) => state.boards);
+	// const [boardsList, setBoardsList] = useState([]);
+	const dispatch = useDispatch();
 
 	useEffect(() => {
-		getAllBoards();
-	}, []);
+		dispatch(getAllBoards());
+	}, [dispatch]);
 
-	const getAllBoards = () => {
-		API.get('/boards/')
-			.then((res) => {
-				console.log(res);
-				setBoardsList(res?.data);
-			})
-			.catch((err) => {
-				toast.error(err?.response?.data?.message);
-				console.log(err);
-			});
-	};
 	return (
 		<div
 			className={clsx(
@@ -58,14 +49,19 @@ const SideBar = () => {
 						<PlusIcon />
 					</button>
 				</div>
-				{boardsList.map((e) => (
+				{boards.map((e) => (
 					<Link
 						to={`/board/${e.id}`}
 						key={e.id}
 						className='hover:bg-gray-100 px-4 py-2 w-[300px]cursor-pointer flex gap-2'>
 						<div
 							className='h-6 w-6 min-w-6 rounded-md border-2 border-grap-400'
-							style={{ background: e.backgroundUrl }}></div>
+							style={{
+								background:
+									e.backgroundUrl.charAt(0) === '#'
+										? e.backgroundUrl
+										: `url(${e.backgroundUrl})`,
+							}}></div>
 						<div className='block text-ellipsis whitespace-nowrap  overflow-hidden w-[228px]'>
 							{e.title}
 						</div>
@@ -82,10 +78,7 @@ const SideBar = () => {
 						onClick={() => setOpenAddBoard(false)}
 					/>
 				</div>
-				<AddBoard
-					closeModal={() => setOpenAddBoard(false)}
-					getAllBoards={getAllBoards}
-				/>
+				<AddBoard closeModal={() => setOpenAddBoard(false)} />
 			</Popup>
 		</div>
 	);
