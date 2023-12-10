@@ -1,44 +1,46 @@
-import React, { useEffect, useState } from "react";
-import ExpandPanel from "../../components/base/ExpandPanel";
-import { Controller, useForm } from "react-hook-form";
-import * as yup from "yup";
-import TextField from "../../components/base/TextField/TextField";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { API } from "../../utils/api";
-import { toast } from "react-toastify";
-import ConfirmDialog from "../../components/base/ConfirmDialog";
-import { useNavigate } from "react-router-dom";
+/** @format */
+
+import React, { useEffect, useState } from 'react';
+import ExpandPanel from '../../components/base/ExpandPanel';
+import { Controller, useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import TextField from '../../components/base/TextField/TextField';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { API } from '../../utils/api';
+import { toast } from 'react-toastify';
+import ConfirmDialog from '../../components/base/ConfirmDialog';
+import { useNavigate } from 'react-router-dom';
 
 const InfoSchema = yup.object().shape({
-	fullName: yup.string().required("Bạn chưa nhập họ tên"),
-	userName: yup.string().required("Bạn chưa nhập tên đăng nhập"),
-	email: yup.string().required("Bạn chưa nhập email"),
+	fullName: yup.string().required('Bạn chưa nhập họ tên'),
+	userName: yup.string().required('Bạn chưa nhập tên đăng nhập'),
+	email: yup.string().required('Bạn chưa nhập email'),
 });
 
 const ChangePasswordSchema = yup.object().shape({
 	oldPassword: yup
 		.string()
-		.required("Bạn chưa nhập mật khẩu cũ")
-		.min(8, "Độ dài tối thiểu của mật khẩu là 8")
+		.required('Bạn chưa nhập mật khẩu cũ')
+		.min(8, 'Độ dài tối thiểu của mật khẩu là 8')
 		.matches(
 			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
-			"Chứa ít nhất 1 chữ hoa, 1 chữ thường và 1 số"
+			'Chứa ít nhất 1 chữ hoa, 1 chữ thường và 1 số'
 		),
 	newPassword: yup
 		.string()
-		.required("Bạn chưa nhập mật khẩu mới")
-		.min(8, "Độ dài tối thiểu của mật khẩu là 8")
+		.required('Bạn chưa nhập mật khẩu mới')
+		.min(8, 'Độ dài tối thiểu của mật khẩu là 8')
 		.matches(
 			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
-			"Chứa ít nhất 1 chữ hoa, 1 chữ thường và 1 số"
+			'Chứa ít nhất 1 chữ hoa, 1 chữ thường và 1 số'
 		),
 	confirmPassword: yup
 		.string()
-		.required("Bạn chưa xác nhận mật khẩu mới")
-		.min(8, "Độ dài tối thiểu của mật khẩu là 8")
+		.required('Bạn chưa xác nhận mật khẩu mới')
+		.min(8, 'Độ dài tối thiểu của mật khẩu là 8')
 		.matches(
 			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
-			"Chứa ít nhất 1 chữ hoa, 1 chữ thường và 1 số"
+			'Chứa ít nhất 1 chữ hoa, 1 chữ thường và 1 số'
 		),
 });
 
@@ -46,18 +48,18 @@ const ManageAccount = () => {
 	const infoForm = useForm({
 		resolver: yupResolver(InfoSchema),
 		defaultValues: {
-			fullName: "",
-			userName: "",
-			email: "",
+			fullName: '',
+			userName: '',
+			email: '',
 		},
 	});
 
 	const changePasswordForm = useForm({
 		resolver: yupResolver(ChangePasswordSchema),
 		defaultValues: {
-			oldPassword: "",
-			newPassword: "",
-			confirmPassword: "",
+			oldPassword: '',
+			newPassword: '',
+			confirmPassword: '',
 		},
 	});
 	const [isEditting, setIsEditting] = useState(false);
@@ -66,68 +68,68 @@ const ManageAccount = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		API.get("/users/")
+		API.get('/users/')
 			.then((data) => {
-				setUserInfo(data.data);
-				infoForm.setValue("fullName", data.data?.fullName);
-				infoForm.setValue("userName", data.data?.userName);
-				infoForm.setValue("email", data.data?.email);
+				setUserInfo(data?.data);
+				infoForm.setValue('fullName', data?.data?.fullName);
+				infoForm.setValue('userName', data?.data?.userName);
+				infoForm.setValue('email', data?.data?.email);
 			})
 			.catch((err) =>
 				toast.error(
-					err.response.data?.message || "Tải thông tin người dùng thất bại"
+					err.response.data?.message || 'Tải thông tin người dùng thất bại'
 				)
 			);
 	}, [infoForm]);
 
 	const onCancelUpdate = () => {
-		infoForm.setValue("fullName", userInfo?.fullName);
-		infoForm.setValue("userName", userInfo?.userName);
-		infoForm.setValue("email", userInfo?.email);
+		infoForm.setValue('fullName', userInfo?.fullName);
+		infoForm.setValue('userName', userInfo?.userName);
+		infoForm.setValue('email', userInfo?.email);
 	};
 
 	const onDeleteAccount = () => {
-		API.delete("/users")
+		API.delete('/users')
 			.then((data) => {
-				toast.success(data.data.message || "Xoá tài khoản thành công");
-				navigate("/sign-in");
+				toast.success(data?.data?.message || 'Xoá tài khoản thành công');
+				navigate('/sign-in');
 			})
 			.catch((err) =>
 				toast.error(
-					err.response.data?.message || "Tải thông tin người dùng thất bại"
+					err?.response.data?.message || 'Tải thông tin người dùng thất bại'
 				)
 			);
 	};
 
 	const onUpdateAccount = (data) => {
-		API.put("/users", { fullName: data.fullName })
+		API.put('/users', { fullName: data?.fullName })
 			.then((res) => {
 				setIsEditting(false);
-				toast.success(res.data.message);
+				toast.success(res?.data?.message);
 			})
-			.catch((err) => toast.error(err.response.data?.message));
+			.catch((err) => toast.error(err?.response.data?.message));
 	};
 
 	const onChangePassword = (data) => {
 		console.log(data);
 		if (data.newPassword !== data.confirmPassword) {
-			changePasswordForm.setError("confirmPassword", {
-				message: "Xác nhận mật khẩu không đúng",
+			changePasswordForm.setError('confirmPassword', {
+				message: 'Xác nhận mật khẩu không đúng',
 			});
 			return;
 		}
-		API.put("users/change-password", data)
+		API.put('users/change-password', data)
 			.then((res) => {
 				clearChangePasswordForm();
-				toast.success(res.data.message);
+				toast.success(res?.data?.message);
 			})
-			.catch((err) => toast.error(err.response.data?.message));
+			.catch((err) => toast.error(err?.response.data?.message));
 	};
 
 	const clearChangePasswordForm = () => {
-		changePasswordForm.setValue("oldPassword", "");
-		changePasswordForm.setValue("newPassword", "");
-		changePasswordForm.setValue("confirmPassword", "");
+		changePasswordForm.setValue('oldPassword', '');
+		changePasswordForm.setValue('newPassword', '');
+		changePasswordForm.setValue('confirmPassword', '');
 	};
 
 	return (
@@ -139,8 +141,7 @@ const ManageAccount = () => {
 						<div className='flex gap-10 mt-4'>
 							<div
 								className='w-[270px] h-[270px] min-w-[270px] text-[90px] text-blue-800 rounded-full bg-blue-400 text-center leading-[270px] font-bold'
-								style={{ userSelect: "none" }}
-							>
+								style={{ userSelect: 'none' }}>
 								H
 							</div>
 							<div className='grid gap-2 w-full'>
@@ -154,7 +155,7 @@ const ManageAccount = () => {
 											helperText={infoForm.formState.errors.fullName?.message}
 											value={field.value}
 											onChange={(e) => field.onChange(e.target.value)}
-											labelStyle={{ fontSize: "small" }}
+											labelStyle={{ fontSize: 'small' }}
 											disabled={!isEditting}
 										/>
 									)}
@@ -169,7 +170,7 @@ const ManageAccount = () => {
 											helperText={infoForm.formState.errors.userName?.message}
 											value={field.value}
 											onChange={(e) => field.onChange(e.target.value)}
-											labelStyle={{ fontSize: "small" }}
+											labelStyle={{ fontSize: 'small' }}
 											disabled={true}
 										/>
 									)}
@@ -184,7 +185,7 @@ const ManageAccount = () => {
 											helperText={infoForm.formState.errors.email?.message}
 											value={field.value}
 											onChange={(e) => field.onChange(e.target.value)}
-											labelStyle={{ fontSize: "small" }}
+											labelStyle={{ fontSize: 'small' }}
 											disabled={true}
 										/>
 									)}
@@ -199,14 +200,12 @@ const ManageAccount = () => {
 										onClick={() => {
 											setIsEditting(false);
 											onCancelUpdate();
-										}}
-									>
+										}}>
 										Huỷ
 									</button>
 									<button
 										className='fill-button w-[150px]'
-										onClick={infoForm.handleSubmit(onUpdateAccount)}
-									>
+										onClick={infoForm.handleSubmit(onUpdateAccount)}>
 										Lưu
 									</button>
 								</>
@@ -214,14 +213,12 @@ const ManageAccount = () => {
 								<>
 									<button
 										className='delete-button w-[150px]'
-										onClick={() => setOpenDelete(true)}
-									>
+										onClick={() => setOpenDelete(true)}>
 										Xoá tài khoản
 									</button>
 									<button
 										className='fill-button w-[150px]'
-										onClick={() => setIsEditting(true)}
-									>
+										onClick={() => setIsEditting(true)}>
 										Cập nhật
 									</button>
 								</>
@@ -248,7 +245,7 @@ const ManageAccount = () => {
 											}
 											value={field.value}
 											onChange={(e) => field.onChange(e.target.value)}
-											labelStyle={{ fontSize: "small" }}
+											labelStyle={{ fontSize: 'small' }}
 											type='password'
 										/>
 									)}
@@ -265,7 +262,7 @@ const ManageAccount = () => {
 											}
 											value={field.value}
 											onChange={(e) => field.onChange(e.target.value)}
-											labelStyle={{ fontSize: "small" }}
+											labelStyle={{ fontSize: 'small' }}
 											type='password'
 										/>
 									)}
@@ -283,7 +280,7 @@ const ManageAccount = () => {
 											}
 											value={field.value}
 											onChange={(e) => field.onChange(e.target.value)}
-											labelStyle={{ fontSize: "small" }}
+											labelStyle={{ fontSize: 'small' }}
 											type='password'
 										/>
 									)}
@@ -293,14 +290,12 @@ const ManageAccount = () => {
 						<div className='flex gap-2 justify-end'>
 							<button
 								className='stroke-button w-[150px]'
-								onClick={() => clearChangePasswordForm()}
-							>
+								onClick={() => clearChangePasswordForm()}>
 								Huỷ
 							</button>
 							<button
 								className='fill-button w-[150px]'
-								onClick={changePasswordForm.handleSubmit(onChangePassword)}
-							>
+								onClick={changePasswordForm.handleSubmit(onChangePassword)}>
 								Lưu
 							</button>
 						</div>
@@ -314,7 +309,7 @@ const ManageAccount = () => {
 					setOpenDelete(false);
 					onDeleteAccount();
 				}}
-				title={"Bạn chắc chắn muốn xoá tài khoản này"}
+				title={'Bạn chắc chắn muốn xoá tài khoản này'}
 			/>
 		</div>
 	);

@@ -1,34 +1,36 @@
-import React from "react";
-import TextField from "./base/TextField/TextField";
-import * as yup from "yup";
-import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import clsx from "clsx";
-import { API } from "../utils/api";
-import { toast } from "react-toastify";
+/** @format */
+
+import React from 'react';
+import TextField from './base/TextField/TextField';
+import * as yup from 'yup';
+import { Controller, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import clsx from 'clsx';
+import { API } from '../utils/api';
+import { toast } from 'react-toastify';
 
 const Schema = yup.object().shape({
-	title: yup.string().required("Bạn chưa nhập tiêu đề"),
+	title: yup.string().required('Bạn chưa nhập tiêu đề'),
 	description: yup.string(),
 	backgroundUrl: yup.string(),
 });
 
 const BackgroundImgList = [
-	"https://images.unsplash.com/photo-1646005172204-db9e7905a864?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1080&ixid=MnwxfDB8MXxyYW5kb218MHwzMDY5NzI4OHx8fHx8fHwxNzAxNjEwMjk4&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1920",
-	"https://images.unsplash.com/photo-1608897250563-6b236de9d205?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1080&ixid=MnwxfDB8MXxyYW5kb218MHwzMDY5NzI4OHx8fHx8fHwxNzAxNjEwODM4&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1920",
-	"https://images.unsplash.com/photo-1678886763409-a7e7b395af43?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1080&ixid=MnwxfDB8MXxyYW5kb218MHwzMDY5NzI4OHx8fHx8fHwxNzAxNjExMDM3&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1920",
-	"https://images.unsplash.com/photo-1677746792119-d8f8ee8e77f5?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1080&ixid=MnwxfDB8MXxyYW5kb218MHwzMDY5NzI4OHx8fHx8fHwxNzAxNjExMDk4&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1920",
+	'https://images.unsplash.com/photo-1646005172204-db9e7905a864?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1080&ixid=MnwxfDB8MXxyYW5kb218MHwzMDY5NzI4OHx8fHx8fHwxNzAxNjEwMjk4&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1920',
+	'https://images.unsplash.com/photo-1608897250563-6b236de9d205?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1080&ixid=MnwxfDB8MXxyYW5kb218MHwzMDY5NzI4OHx8fHx8fHwxNzAxNjEwODM4&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1920',
+	'https://images.unsplash.com/photo-1678886763409-a7e7b395af43?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1080&ixid=MnwxfDB8MXxyYW5kb218MHwzMDY5NzI4OHx8fHx8fHwxNzAxNjExMDM3&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1920',
+	'https://images.unsplash.com/photo-1677746792119-d8f8ee8e77f5?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1080&ixid=MnwxfDB8MXxyYW5kb218MHwzMDY5NzI4OHx8fHx8fHwxNzAxNjExMDk4&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1920',
 ];
 
 const BackgroundColorList = [
-	"#f43f5e",
-	"#d946ef",
-	"#2563eb",
-	"#fbbf24",
-	"#16a34a",
+	'#f43f5e',
+	'#d946ef',
+	'#2563eb',
+	'#fbbf24',
+	'#16a34a',
 ];
 
-const AddBoard = ({ closeModal, defaultData = {} }) => {
+const AddBoard = ({ closeModal, defaultData = {}, getAllBoards }) => {
 	const {
 		control,
 		handleSubmit,
@@ -36,18 +38,18 @@ const AddBoard = ({ closeModal, defaultData = {} }) => {
 	} = useForm({
 		resolver: yupResolver(Schema),
 		defaultValues: {
-			title: "",
-			description: "",
-			backgroundUrl: "#f43f5e",
+			title: '',
+			description: '',
+			backgroundUrl: '#f43f5e',
 		},
 	});
 
 	const onSubmit = (data) => {
 		console.log(data);
-		API.post("/boards/", data)
+		API.post('/boards/', data)
 			.then((res) => {
 				closeModal();
-				toast.success(res.data.message);
+				toast.success(res.data?.message);
 			})
 			.catch((err) => toast.error(err.response.data?.message));
 	};
@@ -64,7 +66,7 @@ const AddBoard = ({ closeModal, defaultData = {} }) => {
 							helperText={errors.title?.message}
 							value={field.value}
 							onChange={(e) => field.onChange(e.target.value)}
-							labelStyle={{ fontSize: "small" }}
+							labelStyle={{ fontSize: 'small' }}
 						/>
 					)}
 				/>
@@ -77,7 +79,7 @@ const AddBoard = ({ closeModal, defaultData = {} }) => {
 							helperText={errors.title?.message}
 							value={field.value}
 							onChange={(e) => field.onChange(e.target.value)}
-							labelStyle={{ fontSize: "small" }}
+							labelStyle={{ fontSize: 'small' }}
 							isMultiLine
 						/>
 					)}
@@ -94,14 +96,14 @@ const AddBoard = ({ closeModal, defaultData = {} }) => {
 										key={id}
 										alt='background-board'
 										style={{
-											width: "calc((100% - 24px)*0.25)",
+											width: 'calc((100% - 24px)*0.25)',
 											backgroundImage: `url(${e})`,
-											backgroundSize: "cover",
-											height: "100px",
+											backgroundSize: 'cover',
+											height: '100px',
 										}}
 										className={clsx(
-											"rounded-lg cursor-pointer",
-											field.value === e ? "selected-img" : ""
+											'rounded-lg cursor-pointer',
+											field.value === e ? 'selected-img' : ''
 										)}
 										onClick={() => field.onChange(e)}
 									/>
@@ -113,13 +115,13 @@ const AddBoard = ({ closeModal, defaultData = {} }) => {
 										key={id}
 										alt='background-board'
 										style={{
-											width: "calc((100% - 32px)*0.2)",
+											width: 'calc((100% - 32px)*0.2)',
 											backgroundColor: e,
-											height: "100px",
+											height: '100px',
 										}}
 										className={clsx(
-											"rounded-lg cursor-pointer",
-											field.value === e ? "selected-img" : ""
+											'rounded-lg cursor-pointer',
+											field.value === e ? 'selected-img' : ''
 										)}
 										onClick={() => field.onChange(e)}
 									/>
@@ -129,13 +131,14 @@ const AddBoard = ({ closeModal, defaultData = {} }) => {
 					)}
 				/>
 				<div className='flex justify-end gap-2 my-2'>
-					<button className='stroke-button w-[100px]' onClick={closeModal}>
+					<button
+						className='stroke-button w-[100px]'
+						onClick={closeModal}>
 						Huỷ
 					</button>
 					<button
 						className='fill-button w-[100px]'
-						onClick={handleSubmit(onSubmit)}
-					>
+						onClick={handleSubmit(onSubmit)}>
 						Đồng ý
 					</button>
 				</div>

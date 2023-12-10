@@ -1,6 +1,8 @@
-import React from "react";
-import "./TextField.css";
-import clsx from "clsx";
+/** @format */
+
+import React from 'react';
+import './TextField.css';
+import clsx from 'clsx';
 
 const TextField = ({
 	required,
@@ -14,13 +16,16 @@ const TextField = ({
 	style,
 	labelStyle,
 	inputStyle,
-	type = "text",
+	type = 'text',
 	className,
 	isMultiLine,
 	hiddenHelperText,
+	onKeyDown,
 }) => {
 	return (
-		<div className={clsx("text-field", className)} style={style}>
+		<div
+			className={clsx('text-field', className)}
+			style={style}>
 			{label && (
 				<div className='label'>
 					<span style={labelStyle}>{label}</span>
@@ -30,13 +35,14 @@ const TextField = ({
 			<div className='min-width-fill-available'>
 				{!isMultiLine ? (
 					<input
+						onKeyDown={onKeyDown}
 						placeholder={placeholder}
 						value={value}
 						onChange={onChange}
 						disabled={disabled}
 						readOnly={readOnly}
 						style={inputStyle}
-						className={helperText ? "error-input" : ""}
+						className={helperText ? 'error-input' : ''}
 						type={type}
 					/>
 				) : (
@@ -47,10 +53,10 @@ const TextField = ({
 						disabled={disabled}
 						readOnly={readOnly}
 						style={inputStyle}
-						className={helperText ? "error-input" : ""}
+						className={helperText ? 'error-input' : ''}
 					/>
 				)}
-				<div className={clsx("helper-text", hiddenHelperText ? "hidden" : "")}>
+				<div className={clsx('helper-text', hiddenHelperText ? 'hidden' : '')}>
 					{helperText}
 				</div>
 			</div>

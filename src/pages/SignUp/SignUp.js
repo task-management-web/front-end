@@ -1,39 +1,41 @@
-import React from "react";
-import styles from "./SignUp.module.css";
-import TextField from "../../components/base/TextField/TextField";
-import * as yup from "yup";
-import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import clsx from "clsx";
-import { Link, useNavigate } from "react-router-dom";
-import { API } from "../../utils/api";
-import { toast } from "react-toastify";
+/** @format */
+
+import React from 'react';
+import styles from './SignUp.module.css';
+import TextField from '../../components/base/TextField/TextField';
+import * as yup from 'yup';
+import { Controller, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import clsx from 'clsx';
+import { Link, useNavigate } from 'react-router-dom';
+import { API } from '../../utils/api';
+import { toast } from 'react-toastify';
 
 const SignUpSchema = yup.object().shape({
-	fullName: yup.string().required("Bạn chưa nhập họ tên"),
+	fullName: yup.string().required('Bạn chưa nhập họ tên'),
 	userName: yup
 		.string()
-		.required("Bạn chưa nhập tên đăng nhập")
-		.matches(/^(\w|_)*$/, "Tên đăng nhập chỉ chứa chữ cái, chữ số và kí tự _"),
+		.required('Bạn chưa nhập tên đăng nhập')
+		.matches(/^(\w|_)*$/, 'Tên đăng nhập chỉ chứa chữ cái, chữ số và kí tự _'),
 	email: yup
 		.string()
-		.email("Email không hợp lệ")
-		.required("Bạn chưa nhập email"),
+		.email('Email không hợp lệ')
+		.required('Bạn chưa nhập email'),
 	password: yup
 		.string()
-		.required("Bạn chưa nhập mật khẩu")
-		.min(8, "Độ dài tối thiểu của mật khẩu là 8")
+		.required('Bạn chưa nhập mật khẩu')
+		.min(8, 'Độ dài tối thiểu của mật khẩu là 8')
 		.matches(
 			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
-			"Chứa ít nhất 1 chữ hoa, 1 chữ thường và 1 số"
+			'Chứa ít nhất 1 chữ hoa, 1 chữ thường và 1 số'
 		),
 	confirmPassword: yup
 		.string()
-		.required("Bạn chưa xác nhận mật khẩu")
-		.min(8, "Độ dài tối thiểu của mật khẩu là 8")
+		.required('Bạn chưa xác nhận mật khẩu')
+		.min(8, 'Độ dài tối thiểu của mật khẩu là 8')
 		.matches(
 			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
-			"Chứa ít nhất 1 chữ hoa, 1 chữ thường và 1 số"
+			'Chứa ít nhất 1 chữ hoa, 1 chữ thường và 1 số'
 		),
 });
 
@@ -47,18 +49,18 @@ export const SignUp = () => {
 	} = useForm({
 		resolver: yupResolver(SignUpSchema),
 		defaultValues: {
-			fullName: "",
-			email: "",
-			userName: "",
-			password: "",
-			confirmPassword: "",
+			fullName: '',
+			email: '',
+			userName: '',
+			password: '',
+			confirmPassword: '',
 		},
 	});
 
 	const onSubmit = (data) => {
 		if (data.password !== data.confirmPassword) {
-			setError("confirmPassword", {
-				message: "Xác nhận mật khẩu không đúng",
+			setError('confirmPassword', {
+				message: 'Xác nhận mật khẩu không đúng',
 			});
 			return;
 		}
@@ -68,11 +70,11 @@ export const SignUp = () => {
 	};
 
 	const signUpApi = (data) => {
-		API.post("/users/", data)
+		API.post('/users/', data)
 			.then((data) => {
 				console.log(data);
 				toast.success(data.data?.message);
-				navigate("sign-in");
+				navigate('sign-in');
 			})
 			.catch((err) => {
 				console.error(err);
@@ -94,12 +96,12 @@ export const SignUp = () => {
 						render={({ field }) => (
 							<TextField
 								label='Họ tên'
-								className={"lg:col-span-2"}
+								className={'lg:col-span-2'}
 								required={true}
 								helperText={errors.fullName?.message}
 								value={field.value}
 								onChange={(e) => field.onChange(e.target.value)}
-								labelStyle={{ fontSize: "small" }}
+								labelStyle={{ fontSize: 'small' }}
 							/>
 						)}
 					/>
@@ -113,7 +115,7 @@ export const SignUp = () => {
 								helperText={errors.userName?.message}
 								value={field.value}
 								onChange={(e) => field.onChange(e.target.value)}
-								labelStyle={{ fontSize: "small" }}
+								labelStyle={{ fontSize: 'small' }}
 							/>
 						)}
 					/>
@@ -127,7 +129,7 @@ export const SignUp = () => {
 								helperText={errors.email?.message}
 								value={field.value}
 								onChange={(e) => field.onChange(e.target.value)}
-								labelStyle={{ fontSize: "small" }}
+								labelStyle={{ fontSize: 'small' }}
 							/>
 						)}
 					/>
@@ -141,7 +143,7 @@ export const SignUp = () => {
 								helperText={errors.password?.message}
 								value={field.value}
 								onChange={(e) => field.onChange(e.target.value)}
-								labelStyle={{ fontSize: "small" }}
+								labelStyle={{ fontSize: 'small' }}
 								type='password'
 							/>
 						)}
@@ -156,21 +158,22 @@ export const SignUp = () => {
 								helperText={errors.confirmPassword?.message}
 								value={field.value}
 								onChange={(e) => field.onChange(e.target.value)}
-								labelStyle={{ fontSize: "small" }}
+								labelStyle={{ fontSize: 'small' }}
 								type='password'
 							/>
 						)}
 					/>
 					<div className={styles.buttonRow}>
 						<button
-							className={clsx(styles.submitButton, "fill-button")}
-							onClick={handleSubmit(onSubmit)}
-						>
+							className={clsx(styles.submitButton, 'fill-button')}
+							onClick={handleSubmit(onSubmit)}>
 							ĐĂNG KÝ
 						</button>
 						<div className={styles.signinText}>
-							Đã có tài khoản?{" "}
-							<Link to={"/sign-in"} className='link-text'>
+							Đã có tài khoản?{' '}
+							<Link
+								to={'/sign-in'}
+								className='link-text'>
 								Đăng nhập
 							</Link>
 						</div>
