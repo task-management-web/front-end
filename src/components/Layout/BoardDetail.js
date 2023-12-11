@@ -1,7 +1,12 @@
 /** @format */
 
 import React, { useState } from 'react';
-import { PlusIcon, XIcon } from '@heroicons/react/outline';
+import {
+	PencilAltIcon,
+	PlusIcon,
+	TrashIcon,
+	XIcon,
+} from '@heroicons/react/outline';
 
 import clsx from 'clsx';
 import ExpandPanel from '../base/ExpandPanel';
@@ -9,17 +14,26 @@ import { useDispatch, useSelector } from 'react-redux';
 import Popup from 'reactjs-popup';
 import AddBoard from '../AddBoard';
 import ConfirmDialog from '../base/ConfirmDialog';
-import { closeBoard } from '../../actions/board';
+import { changeRoleMember, closeBoard, getBoard } from '../../actions/board';
 import { useNavigate } from 'react-router-dom';
 import AddBoardMember from '../AddBoardMember';
+import { ListMemberRoles } from '../../utils/variable';
+import UserAvatar from '../UserAvatar';
+import DropDown from '../base/DropDown';
+// import TextField from '../base/TextField/TextField';
+import SelectBox from '../base/SelectBox';
+import { deleteMember } from './../../actions/board';
 
 const BoardDetail = ({ open, setOpen }) => {
 	const detail = useSelector((state) => state.board);
+	const selfInfo = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [openUpdate, setOpenUpdate] = useState(false);
 	const [openConfirm, setOpenConfirm] = useState(false);
 	const [openAddMember, setOpenAddMember] = useState(false);
+	const [selectedRole, setSelectedRole] = useState(1);
+	const [openConfirmMember, setOpenConfirmMember] = useState(-1);
 
 	const onCloseBoard = () => {
 		dispatch(closeBoard(detail.id, navigate));
@@ -33,8 +47,8 @@ const BoardDetail = ({ open, setOpen }) => {
 			style={{ minHeight: 'calc(100vh - 56px)' }}>
 			<div
 				className={clsx(
-					'flex justify-between p-4 overflow-hidden',
-					open ? 'w-[400px]' : 'hidden'
+					'flex justify-between overflow-hidden',
+					open ? 'w-[400px] p-4 ' : 'w-0 hidden'
 				)}>
 				<span className='font-semibold text-lg overflow-hidden'>Chi tiết</span>
 				<button
@@ -47,10 +61,11 @@ const BoardDetail = ({ open, setOpen }) => {
 			</div>
 			<div
 				className={clsx(
-					'transition-all duration-300 overflow-hidden px-4',
-					open ? 'w-[400px]' : 'w-0'
+					'transition-all duration-300 overflow-hidden ',
+					open ? 'w-[400px] px-4' : 'w-0'
 				)}>
 				<ExpandPanel
+					defaultOpen={false}
 					className={'!px-4 !py-2'}
 					title='Mô tả'
 					element={
@@ -59,6 +74,7 @@ const BoardDetail = ({ open, setOpen }) => {
 					titleClassName={'text-base'}
 				/>
 				<ExpandPanel
+					defaultOpen={false}
 					className={'!px-4 !py-2 mt-4'}
 					title={
 						<div className='flex gap-2'>
@@ -69,13 +85,89 @@ const BoardDetail = ({ open, setOpen }) => {
 							/>
 						</div>
 					}
-					element={
-						detail.description || <span className='italic'>Không có mô tả</span>
-					}
+					element={detail.users?.map((e) => (
+						<div
+							key={e.id}
+							className='flex mb-2 justify-between'>
+							<div className='flex gap-4'>
+								<UserAvatar userName={e.userName} />
+								<div>
+									<div className='mb-1'>
+										{e.fullName} ({e.email})
+									</div>
+									<span
+										className={clsx(
+											'text-sm py-1 px-2 rounded-lg  text-white',
+											e.BoardMember?.role === 0
+												? 'bg-red-600'
+												: e.BoardMember?.role === 1
+												? 'bg-green-500'
+												: 'bg-gray-500'
+										)}>
+										{ListMemberRoles[e.BoardMember?.role]?.label}
+									</span>
+								</div>
+							</div>
+							<div
+								className={clsx(
+									'flex my-auto',
+									e.id === selfInfo?.id ? 'hidden' : ''
+								)}>
+								<DropDown
+									classNameButton={'!p-0'}
+									buttonElement={
+										<PencilAltIcon className='w-6 h-6 p-1 hover:bg-gray-200 cursor-pointer rounded-md' />
+									}
+									itemsElement={
+										<div className='p-4'>
+											<div className='flex justify-between gap-2 px-8 pb-2'>
+												<div className='font-semibold text-center w-full'>
+													Cập nhật quyền
+												</div>
+											</div>
+											<SelectBox
+												options={ListMemberRoles}
+												label='Quyền'
+												required={true}
+												hiddenHelperText
+												labelStyle={{ fontSize: 'small' }}
+												placeholder={''}
+												value={selectedRole}
+												onChange={(e) => {
+													setSelectedRole(e.value);
+												}}
+											/>
+											<button
+												className='fill-button w-fit mt-2'
+												onClick={() => {
+													dispatch(
+														changeRoleMember(
+															detail.id,
+															e.id,
+															selectedRole,
+															() => {
+																dispatch(getBoard(detail.id));
+															}
+														)
+													);
+												}}>
+												Cập nhật
+											</button>
+										</div>
+									}
+									classNameItems={'!fixed w-[280px] -translate-x-[100%]'}
+								/>
+								<TrashIcon
+									className='w-6 h-6 p-1 hover:bg-gray-200 cursor-pointer rounded-md text-red-500'
+									onClick={() => setOpenConfirmMember(e.id)}
+								/>
+							</div>
+						</div>
+					))}
 					titleClassName={'text-base'}
 				/>
 			</div>
-			<div className='p-4 flex gap-2'>
+			<div className={clsx(open ? 'p-4 flex gap-2' : 'p-0 hidden')}>
 				<button
 					className='delete-button w-full'
 					onClick={() => setOpenConfirm(true)}>
@@ -110,6 +202,19 @@ const BoardDetail = ({ open, setOpen }) => {
 					onCloseBoard();
 				}}
 				title={'Bạn chắc chắn muốn đóng bảng này'}
+			/>
+			<ConfirmDialog
+				open={openConfirmMember > -1}
+				onClickNo={() => setOpenConfirmMember(-1)}
+				onClickYes={() => {
+					dispatch(
+						deleteMember(detail.id, openConfirmMember, () =>
+							dispatch(getBoard(detail.id))
+						)
+					);
+					setOpenConfirmMember(-1);
+				}}
+				title={'Bạn chắc chắn muốn xoá thành viên này'}
 			/>
 			<Popup
 				open={openAddMember}

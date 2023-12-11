@@ -9,36 +9,40 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Layout from './components/Layout/Layout';
 import ManageAccount from './pages/ManageAccount/ManageAccount';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 function App() {
 	return (
-		<div className='App'>
-			<ToastContainer theme='colored' />
-			<Routes>
-				<Route
-					path='/'
-					element={<Layout />}>
-					{/* <Route path='' element={<Board />} /> */}
+		<DndProvider backend={HTML5Backend}>
+			<div className='App'>
+				<ToastContainer theme='colored' />
+				<Routes>
 					<Route
-						path='board/:boardId'
-						// children={({ match }) => (match ? <Board match={match} /> : <></>)}
-						element={<Board />}
+						path='/'
+						element={<Layout />}>
+						{/* <Route path='' element={<Board />} /> */}
+						<Route
+							path='board/:boardId'
+							// children={({ match }) => (match ? <Board match={match} /> : <></>)}
+							element={<Board />}
+						/>
+						<Route
+							path='manage-account'
+							element={<ManageAccount />}
+						/>
+					</Route>
+					<Route
+						path='/sign-up'
+						element={<SignUp />}
 					/>
 					<Route
-						path='manage-account'
-						element={<ManageAccount />}
+						path='/sign-in'
+						element={<SignIn />}
 					/>
-				</Route>
-				<Route
-					path='/sign-up'
-					element={<SignUp />}
-				/>
-				<Route
-					path='/sign-in'
-					element={<SignIn />}
-				/>
-			</Routes>
-		</div>
+				</Routes>
+			</div>
+		</DndProvider>
 	);
 }
 

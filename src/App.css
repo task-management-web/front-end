@@ -126,8 +126,12 @@ textarea:focus {
 	height: 100%;
 	display: grid;
 	background-color: rgba(0, 0, 0, 0.5);
-	text-align: center;
-	line-height: 100px;
+	/* text-align: center; */
+	/* line-height: ; */
+	vertical-align: middle;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	color: white;
 	border-radius: 8px;
 }

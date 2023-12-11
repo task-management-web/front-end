@@ -60,3 +60,40 @@ export const closeBoard = (boardId, navigate) => (dispatch) => {
 			// console.log(err);
 		});
 };
+
+export const addMember = (boardId, memberId, role, next) => (dispatch) => {
+	API.post(`/boards/${boardId}/members/${memberId}?role=${role}`)
+		.then((data) => {
+			toast.success(data.data?.message);
+			next();
+		})
+		.catch((err) => {
+			toast.error(err?.response?.data?.message);
+			// console.log(err);
+		});
+};
+
+export const changeRoleMember =
+	(boardId, memberId, role, next) => (dispatch) => {
+		API.put(`/boards/${boardId}/members/${memberId}?role=${role}`)
+			.then((data) => {
+				toast.success(data.data?.message);
+				next();
+			})
+			.catch((err) => {
+				toast.error(err?.response?.data?.message);
+				// console.log(err);
+			});
+	};
+
+export const deleteMember = (boardId, memberId, next) => (dispatch) => {
+	API.delete(`/boards/${boardId}/members/${memberId}`)
+		.then((data) => {
+			toast.success(data.data?.message);
+			next();
+		})
+		.catch((err) => {
+			toast.error(err?.response?.data?.message);
+			// console.log(err);
+		});
+};

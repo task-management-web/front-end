@@ -75,18 +75,6 @@ const ManageAccount = () => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		// API.get('/users/')
-		// 	.then((data) => {
-		// 		setUserInfo(data?.data);
-		// 		infoForm.setValue('fullName', data?.data?.fullName);
-		// 		infoForm.setValue('userName', data?.data?.userName);
-		// 		infoForm.setValue('email', data?.data?.email);
-		// 	})
-		// 	.catch((err) =>
-		// 		toast.error(
-		// 			err.response.data?.message || 'Tải thông tin người dùng thất bại'
-		// 		)
-		// 	);
 		dispatch(getUserInfo());
 	}, [dispatch]);
 
@@ -113,7 +101,6 @@ const ManageAccount = () => {
 	};
 
 	const onChangePassword = (data) => {
-		console.log(data);
 		if (data.newPassword !== data.confirmPassword) {
 			changePasswordForm.setError('confirmPassword', {
 				message: 'Xác nhận mật khẩu không đúng',

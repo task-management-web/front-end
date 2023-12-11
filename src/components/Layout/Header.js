@@ -41,7 +41,7 @@ const Header = () => {
 								</div>
 								<div className='text-sm'>
 									<div className='block text-ellipsis overflow-hidden w-[154px]'>
-										{user?.userName}
+										{user?.fullName}
 									</div>
 									<div className='block text-ellipsis overflow-hidden w-[154px]'>
 										{user?.email}

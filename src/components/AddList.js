@@ -5,20 +5,37 @@ import TextField from './base/TextField/TextField';
 import { PlusIcon, XIcon } from '@heroicons/react/outline';
 import clsx from 'clsx';
 import { useLocation } from 'react-router-dom';
-import { API } from '../utils/api';
+import { useDispatch } from 'react-redux';
+import { addList } from '../actions/list';
+import { getBoard } from '../actions/board';
 
 const AddList = ({ position }) => {
 	const [isAdd, setIsAdd] = useState(false);
 	const location = useLocation();
 	const [listTitle, setListTitle] = useState('');
+	const dispatch = useDispatch();
 	const boardId = location.pathname.split('/')[2];
 
 	const onAddList = (data) => {
-		API.post('/list/create', {
-			title: listTitle,
-			boardId: boardId,
-			position: position,
-		});
+		dispatch(
+			addList(
+				{
+					title: listTitle,
+					boardId: boardId,
+					position: position,
+				},
+				() => {
+					setIsAdd(false);
+					dispatch(getBoard(boardId));
+					setListTitle('');
+				}
+			)
+		);
+		// API.post('/list/create', {
+		// 	title: listTitle,
+		// 	boardId: boardId,
+		// 	position: position,
+		// });
 	};
 
 	return (
@@ -34,7 +51,6 @@ const AddList = ({ position }) => {
 					<TextField
 						value={listTitle}
 						onChange={(e) => {
-							console.log(e);
 							setListTitle(e.target.value);
 						}}
 						onKeyDown={(e) => {
