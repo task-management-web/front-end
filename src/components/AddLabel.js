@@ -161,7 +161,10 @@ const AddLabel = ({ getCardInfo, cardId, cardInfo }) => {
 								required={true}
 								helperText={errors.title?.message}
 								value={field.value}
-								onChange={(e) => field.onChange(e.target.value)}
+								onChange={(e) => {
+									e.preventDefault();
+									field.onChange(e.target.value);
+								}}
 								labelStyle={{ fontSize: 'small' }}
 							/>
 						)}

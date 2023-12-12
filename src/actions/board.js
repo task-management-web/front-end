@@ -47,13 +47,14 @@ export const updateBoard = (boardId, data, closeModal, next) => (dispatch) =>
 		resolve();
 	});
 
-export const closeBoard = (boardId, navigate) => (dispatch) => {
+export const closeBoard = (boardId, navigate, next) => (dispatch) => {
 	API.delete(`/boards/${boardId}`)
 		.then((data) => {
 			toast.success(data.data?.message);
 			navigate('/');
 			dispatch({ type: 'DELETE_BOARD', payload: {} });
 			changeBackground('#f9c5d5');
+			next();
 		})
 		.catch((err) => {
 			toast.error(err?.response?.data?.message);

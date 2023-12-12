@@ -39,7 +39,7 @@ const CheckListItem = ({ itemInfo, getCardInfo }) => {
 	};
 
 	return (
-		<div className='pl-4 flex gap-2 w-full justify-between my-3'>
+		<div className='pl-6 flex gap-2 w-full justify-between my-3'>
 			{!isEdit ? (
 				<div>
 					<Checkbox

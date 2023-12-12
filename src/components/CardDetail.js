@@ -12,7 +12,15 @@ import AddDate from './AddDate';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { API } from '../utils/api';
-import { PencilAltIcon, TrashIcon, XIcon } from '@heroicons/react/outline';
+import {
+	ClipboardListIcon,
+	ClockIcon,
+	CreditCardIcon,
+	PencilAltIcon,
+	TagIcon,
+	TrashIcon,
+	XIcon,
+} from '@heroicons/react/outline';
 import CheckList from './CheckList';
 import UserAvatar from './UserAvatar';
 import AddCover from './AddCover';
@@ -112,14 +120,50 @@ const CardDetail = ({ cardId, closeModal, getListInfo }) => {
 			.catch((err) => toast.error('Xoá bình luận thất bại'));
 	};
 
-	// console.log(board?.users?.find((el) => el.id === 1).fullName);
-
 	return (
 		<div className='w-[65vw] h-[500px] px-8 pb-4 pt-0 max-h-[80vh] overflow-auto grid-cols-5 grid gap-6'>
 			<div className='grid h-fit gap-1 col-span-4'>
+				{(cardDetail.startDate || cardDetail.dueDate) && (
+					<div className=' my-1 flex gap-2'>
+						<ClockIcon className='w-6 h-6 my-auto' />
+						{cardDetail.startDate ? (
+							<>
+								<span className='italic'>Bắt đầu:</span>
+								{new Date(cardDetail?.startDate).toLocaleDateString('vi')}
+							</>
+						) : (
+							''
+						)}
+						{cardDetail.startDate && cardDetail.dueDate && ' - '}
+						{cardDetail.dueDate ? (
+							<>
+								<span className='italic'>Kết thúc:</span>
+								{new Date(cardDetail?.dueDate).toLocaleDateString('vi')}
+							</>
+						) : (
+							''
+						)}
+					</div>
+				)}
+				{cardDetail.labels && cardDetail.labels.length > 0 && (
+					<div className='my-1 flex gap-2'>
+						<TagIcon className='w-6 h-6 my-auto' />
+						<span className='italic'>Nhãn:</span>
+						{cardDetail.labels.map((e) => (
+							<span
+								key={e.id}
+								style={{ backgroundColor: e.color }}
+								className='text-white px-4 py-[2px] rounded-md'>
+								{e.title}
+							</span>
+						))}
+					</div>
+				)}
 				<div className='w-full flex justify-between'>
-					<span className='text-lg font-semibold'>Thẻ</span>
-
+					<div className='my-1 flex gap-2'>
+						<CreditCardIcon className='w-6 h-6 my-auto' />
+						<span className='italic'>Thẻ:</span>
+					</div>
 					<div className='flex gap-2'>
 						{isEdit !== 'CARD_INFO' && (
 							<PencilAltIcon
@@ -134,7 +178,7 @@ const CardDetail = ({ cardId, closeModal, getListInfo }) => {
 					</div>
 				</div>
 				{isEdit !== 'CARD_INFO' ? (
-					<>
+					<div className='ml-8'>
 						<div>
 							Tên thẻ: <span className='font-semibold'>{cardDetail.title}</span>
 						</div>
@@ -144,9 +188,9 @@ const CardDetail = ({ cardId, closeModal, getListInfo }) => {
 								<span className='italic'>Không có mô tả</span>
 							)}
 						</div>
-					</>
+					</div>
 				) : (
-					<div className='grid h-fit gap-1'>
+					<div className='grid h-fit gap-1 ml-8'>
 						<Controller
 							control={control}
 							name='title'
@@ -194,7 +238,10 @@ const CardDetail = ({ cardId, closeModal, getListInfo }) => {
 						</div>
 					</div>
 				)}
-				<span className='text-lg font-semibold mt-2'>Công việc</span>
+				<div className='my-1 flex gap-2'>
+					<ClipboardListIcon className='w-6 h-6 my-auto' />
+					<span className='italic'>Công việc:</span>
+				</div>
 				{cardDetail?.checklists?.map((e) => (
 					<CheckList
 						key={e.id}
@@ -240,7 +287,9 @@ const CardDetail = ({ cardId, closeModal, getListInfo }) => {
 					)}
 				</div>
 				{cardDetail?.comments?.map((e) => (
-					<div className='flex gap-4 mt-2'>
+					<div
+						className='flex gap-4 mt-2'
+						key={e.id}>
 						<UserAvatar
 							userName={user.userName}
 							className={'!m-0'}
@@ -315,13 +364,6 @@ const CardDetail = ({ cardId, closeModal, getListInfo }) => {
 
 			<div className='grid gap-2 col-span-1 h-fit'>
 				<div className='text-sm font-semibold'>Thêm vào thẻ</div>
-				{/* <DropDown
-					className={'w-full'}
-					classNameButton={'p-0 stroke-button w-full '}
-					buttonElement={<div>Thành viên</div>}
-					itemsElement={<AddMember cardId={cardDetail.id} />}
-					classNameItems={'!fixed w-[280px]'}
-				/> */}
 				<DropDown
 					className={'w-full'}
 					classNameButton={'p-0 stroke-button w-full'}
@@ -344,6 +386,7 @@ const CardDetail = ({ cardId, closeModal, getListInfo }) => {
 							getCardInfo={getCardInfo}
 							cardId={cardId}
 							cardInfo={cardDetail}
+							getListInfo={getListInfo}
 						/>
 					}
 					classNameItems={'!fixed w-[280px]'}
@@ -369,24 +412,11 @@ const CardDetail = ({ cardId, closeModal, getListInfo }) => {
 							getCardInfo={getCardInfo}
 							cardId={cardId}
 							cardInfo={cardDetail}
+							getListInfo={getListInfo}
 						/>
 					}
 					classNameItems={'!fixed top-[10%] w-[280px]'}
 				/>
-
-				{/* <DropDown
-					className={'w-full'}
-					classNameButton={'p-0 stroke-button w-full'}
-					buttonElement={<div>Ngày</div>}
-					itemsElement={
-						<AddAttachment
-							getCardInfo={getCardInfo}
-							cardId={cardId}
-							cardInfo={cardDetail}
-						/>
-					}
-					classNameItems={'!fixed top-[10%] w-[280px]'}
-				/> */}
 			</div>
 		</div>
 	);

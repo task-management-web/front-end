@@ -11,6 +11,7 @@ import Layout from './components/Layout/Layout';
 import ManageAccount from './pages/ManageAccount/ManageAccount';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import Home from './pages/Home/Home';
 
 function App() {
 	return (
@@ -21,15 +22,17 @@ function App() {
 					<Route
 						path='/'
 						element={<Layout />}>
-						{/* <Route path='' element={<Board />} /> */}
 						<Route
 							path='board/:boardId'
-							// children={({ match }) => (match ? <Board match={match} /> : <></>)}
 							element={<Board />}
 						/>
 						<Route
 							path='manage-account'
 							element={<ManageAccount />}
+						/>
+						<Route
+							path=''
+							element={<Home />}
 						/>
 					</Route>
 					<Route

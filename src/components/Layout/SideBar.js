@@ -6,7 +6,7 @@ import { useState } from 'react';
 import clsx from 'clsx';
 import Popup from 'reactjs-popup';
 import AddBoard from '../AddBoard';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllBoards } from '../../actions/boards';
 
@@ -14,8 +14,9 @@ const SideBar = () => {
 	const [isOpen, setIsOpen] = useState(true);
 	const [openAddBoard, setOpenAddBoard] = useState(false);
 	const boards = useSelector((state) => state.boards);
-	// const [boardsList, setBoardsList] = useState([]);
 	const dispatch = useDispatch();
+	const location = useLocation();
+	const boardId = location.pathname.split('/')[2];
 
 	useEffect(() => {
 		dispatch(getAllBoards());
@@ -53,7 +54,10 @@ const SideBar = () => {
 					<Link
 						to={`/board/${e.id}`}
 						key={e.id}
-						className='hover:bg-gray-100 px-4 py-2 w-[300px]cursor-pointer flex gap-2'>
+						className={clsx(
+							' px-4 py-2 w-[300px]cursor-pointer flex gap-2',
+							e.id === Number(boardId) ? 'bg-gray-200' : 'hover:bg-gray-100'
+						)}>
 						<div
 							className='h-6 w-6 min-w-6 rounded-md border-2 border-grap-400'
 							style={{

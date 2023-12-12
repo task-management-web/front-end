@@ -5,9 +5,8 @@ import { BackgroundColorList } from './../utils/variable';
 import clsx from 'clsx';
 import { API } from '../utils/api';
 import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
 
-const AddCover = ({ getCardInfo, cardId, cardInfo }) => {
+const AddCover = ({ getCardInfo, cardId, cardInfo, getListInfo }) => {
 	const [cover, setCover] = useState(
 		cardInfo.coverUrl ? cardInfo.coverUrl : BackgroundColorList[0]
 	);
@@ -16,6 +15,7 @@ const AddCover = ({ getCardInfo, cardId, cardInfo }) => {
 			.then((res) => {
 				toast.success('Thêm ảnh bìa thành công');
 				getCardInfo();
+				getListInfo();
 			})
 			.catch((err) => toast.error('Thêm ảnh bìa thất bại'));
 	};

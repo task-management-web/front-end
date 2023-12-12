@@ -79,7 +79,6 @@ const AddBoard = ({ closeModal, type = 'ADD' }) => {
 					render={({ field }) => (
 						<TextField
 							label='Mô tả'
-							helperText={errors.title?.message}
 							value={field.value}
 							onChange={(e) => field.onChange(e.target.value)}
 							labelStyle={{ fontSize: 'small' }}

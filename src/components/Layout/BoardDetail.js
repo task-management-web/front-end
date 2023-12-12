@@ -23,6 +23,7 @@ import DropDown from '../base/DropDown';
 // import TextField from '../base/TextField/TextField';
 import SelectBox from '../base/SelectBox';
 import { deleteMember } from './../../actions/board';
+import { getAllBoards } from '../../actions/boards';
 
 const BoardDetail = ({ open, setOpen }) => {
 	const detail = useSelector((state) => state.board);
@@ -36,7 +37,7 @@ const BoardDetail = ({ open, setOpen }) => {
 	const [openConfirmMember, setOpenConfirmMember] = useState(-1);
 
 	const onCloseBoard = () => {
-		dispatch(closeBoard(detail.id, navigate));
+		dispatch(closeBoard(detail.id, navigate, () => dispatch(getAllBoards())));
 	};
 	return (
 		<div
@@ -92,7 +93,11 @@ const BoardDetail = ({ open, setOpen }) => {
 							<div className='flex gap-4'>
 								<UserAvatar userName={e.userName} />
 								<div>
-									<div className='mb-1'>
+									<div
+										className={clsx(
+											'mb-1',
+											selfInfo.id === e.id ? 'font-semibold' : ''
+										)}>
 										{e.fullName} ({e.email})
 									</div>
 									<span
@@ -111,7 +116,7 @@ const BoardDetail = ({ open, setOpen }) => {
 							<div
 								className={clsx(
 									'flex my-auto',
-									e.id === selfInfo?.id ? 'hidden' : ''
+									e.id === selfInfo?.id || !detail.isAdmin ? 'hidden' : ''
 								)}>
 								<DropDown
 									classNameButton={'!p-0'}
@@ -167,7 +172,10 @@ const BoardDetail = ({ open, setOpen }) => {
 					titleClassName={'text-base'}
 				/>
 			</div>
-			<div className={clsx(open ? 'p-4 flex gap-2' : 'p-0 hidden')}>
+			<div
+				className={clsx(
+					open && detail.isAdmin ? 'p-4 flex gap-2' : 'p-0 hidden'
+				)}>
 				<button
 					className='delete-button w-full'
 					onClick={() => setOpenConfirm(true)}>

@@ -1,6 +1,7 @@
 /** @format */
 
 import {
+	CheckCircleIcon,
 	CheckIcon,
 	PencilAltIcon,
 	TrashIcon,
@@ -53,10 +54,13 @@ const CheckList = ({ getCardInfo, cardId, checkListInfo }) => {
 			.catch((err) => toast.error('Thêm công việc con thất bại'));
 	};
 	return (
-		<div className='mb-2 px-4 py-2 border rounded-md'>
+		<div className='ml-8 mb-2 mt-2'>
 			<div className='flex gap-2 w-full justify-between '>
 				{!isEdit ? (
-					checkListInfo.title
+					<div className='flex gap-2'>
+						<CheckCircleIcon className='w-4 h-4 my-auto' />
+						{checkListInfo.title}
+					</div>
 				) : (
 					<TextField
 						hiddenHelperText
@@ -104,12 +108,12 @@ const CheckList = ({ getCardInfo, cardId, checkListInfo }) => {
 			))}
 			{!isAdd ? (
 				<button
-					className='fill-button !px-2 !py-1 !text-sm mt-2'
+					className='fill-button !px-2 !py-1 !text-sm mt-2 ml-6'
 					onClick={() => setIsAdd(true)}>
 					Thêm công việc con
 				</button>
 			) : (
-				<div className='mt-2'>
+				<div className='mt-2 ml-6'>
 					<TextField
 						hiddenHelperText
 						value={itemTitle}

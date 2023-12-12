@@ -11,7 +11,7 @@ import { API } from '../utils/api';
 
 registerLocale('vi', vi);
 
-const AddDate = ({ cardInfo, cardId, getCardInfo }) => {
+const AddDate = ({ cardInfo, cardId, getCardInfo, getListInfo }) => {
 	const [startDate, setStartDate] = useState(
 		cardInfo.startDate ? new Date(cardInfo.startDate) : undefined
 	);
@@ -43,6 +43,7 @@ const AddDate = ({ cardInfo, cardId, getCardInfo }) => {
 			.then((res) => {
 				toast.success('Thêm ngày thành công');
 				getCardInfo();
+				getListInfo();
 			})
 			.catch((err) => toast.error('Thêm ngày thất bại'));
 	};
