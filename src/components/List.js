@@ -21,36 +21,45 @@ import { getBoard } from '../actions/board';
 import { useLocation } from 'react-router-dom';
 
 const List = ({ listId }) => {
-	const ref = useRef(null);
 	const moving = useSelector((state) => state.moving);
-	const [{ opacity }, drag] = useDrag(() => ({
+	const [listInfo, setListInfo] = useState({});
+
+	const [{ opacity }, dragRef] = useDrag(() => ({
 		type: 'LIST',
 		collect: (monitor) => ({
 			opacity: monitor.isDragging() ? 0.5 : 1,
 		}),
 	}));
-	const [{ isOver }, drop] = useDrop(
+	const [{ isOver }, dropRef] = useDrop(
 		() => ({
-			accept: 'CARD',
+			accept: ['CARD', 'LIST'],
 			collect: (monitor) => ({
 				isOver: !!monitor.isOver(),
 			}),
-			drop: () =>
-				dispatch({ type: 'DROP', payload: { listId: listId, type: 'CARD' } }),
+			drop: () => {
+				console.log(listInfo.position);
+				dispatch({
+					type: 'DROP',
+					payload: {
+						listId: listId,
+						type: 'CARD',
+						position: listInfo.position,
+					},
+				});
+			},
 		}),
-		[]
+		[listInfo]
 	);
-	drag(drop(ref));
 
 	const [isAdd, setIsAdd] = useState(false);
 	const [cardTitle, setCardTitle] = useState('');
-	const [listInfo, setListInfo] = useState({});
 	const [listTitle, setListTitle] = useState(listInfo?.title || '');
 	const [openDelete, setOpenDelete] = useState(false);
 
 	const dispatch = useDispatch();
 	const location = useLocation();
 	const boardId = location.pathname.split('/')[2];
+	const board = useSelector((state) => state.board);
 
 	const updateTitleList = () => {
 		dispatch(updateList(listId, { title: listTitle }));
@@ -60,7 +69,7 @@ const List = ({ listId }) => {
 		API.get(`/list/${listId}`)
 			.then((res) => setListInfo(res?.data))
 			.catch((err) => console.log(err));
-	}, [listId]);
+	}, [listId, board?.lists]);
 
 	const onAddCard = () => {
 		API.post('/card/createcard', {
@@ -87,7 +96,11 @@ const List = ({ listId }) => {
 	};
 
 	useEffect(() => {
-		if (moving.start && moving.end) {
+		if (
+			moving.start &&
+			moving.end &&
+			(moving.start.listId === listId || moving.end.listId === listId)
+		) {
 			if (moving.start.type === 'CARD') {
 				if (moving.start.listId === moving.end.listId) {
 					dispatch({ type: 'END' });
@@ -98,12 +111,20 @@ const List = ({ listId }) => {
 					})
 						.then(() => {
 							getListInfo();
-							// toast.success('Cập nhật vị trí thẻ thành công');
 						})
 						.catch(() => {});
 					dispatch({ type: 'END' });
 					return;
 				}
+			} else {
+				console.log(moving);
+				API.put(`/list/update/${moving.start.listId}`, {
+					position: moving.end.position,
+				});
+				API.put(`/list/update/${moving.end.listId}`, {
+					position: moving.start.position,
+				});
+				setTimeout(() => dispatch(getBoard(boardId)), 50);
 			}
 			dispatch({ type: 'END' });
 		}
@@ -120,8 +141,20 @@ const List = ({ listId }) => {
 				isOver ? 'scale-105' : ''
 			)}
 			style={{ opacity }}
-			ref={ref}>
-			<div className='font-semibold text-sm py-1 px-2 flex justify-between'>
+			ref={dropRef}>
+			<div
+				className='font-semibold text-sm py-1 px-2 flex justify-between'
+				ref={dragRef}
+				onDragStart={() =>
+					dispatch({
+						type: 'START_DRAG',
+						payload: {
+							listId: listId,
+							position: listInfo.position,
+							type: 'LIST',
+						},
+					})
+				}>
 				{listInfo?.title}
 				<div className='flex '>
 					<DropDown
