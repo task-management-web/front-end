@@ -10,15 +10,19 @@ import {
 	XIcon,
 } from '@heroicons/react/outline';
 import DropDown from './base/DropDown';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateList } from '../actions/list';
 import { API } from '../utils/api';
 import { toast } from 'react-toastify';
 import { useDrag, useDrop } from 'react-dnd';
 import { clsx } from 'clsx';
+import ConfirmDialog from './base/ConfirmDialog';
+import { getBoard } from '../actions/board';
+import { useLocation } from 'react-router-dom';
 
 const List = ({ listId }) => {
 	const ref = useRef(null);
+	const moving = useSelector((state) => state.moving);
 	const [{ opacity }, drag] = useDrag(() => ({
 		type: 'LIST',
 		collect: (monitor) => ({
@@ -31,6 +35,8 @@ const List = ({ listId }) => {
 			collect: (monitor) => ({
 				isOver: !!monitor.isOver(),
 			}),
+			drop: () =>
+				dispatch({ type: 'DROP', payload: { listId: listId, type: 'CARD' } }),
 		}),
 		[]
 	);
@@ -39,12 +45,15 @@ const List = ({ listId }) => {
 	const [isAdd, setIsAdd] = useState(false);
 	const [cardTitle, setCardTitle] = useState('');
 	const [listInfo, setListInfo] = useState({});
-	const [listTitle, setListTitle] = useState(listInfo?.title);
+	const [listTitle, setListTitle] = useState(listInfo?.title || '');
+	const [openDelete, setOpenDelete] = useState(false);
 
 	const dispatch = useDispatch();
+	const location = useLocation();
+	const boardId = location.pathname.split('/')[2];
 
 	const updateTitleList = () => {
-		dispatch(updateList(listInfo.id, { title: listTitle }));
+		dispatch(updateList(listId, { title: listTitle }));
 	};
 
 	const getListInfo = useCallback(() => {
@@ -64,6 +73,15 @@ const List = ({ listId }) => {
 				getListInfo();
 				setIsAdd(false);
 				setCardTitle('');
+			})
+			.catch((err) => console.log(err));
+	};
+
+	const onDeleteList = () => {
+		API.delete(`/list/delete/${listId}`)
+			.then((res) => {
+				toast.success('Xoá danh sách thành công');
+				dispatch(getBoard(boardId));
 			})
 			.catch((err) => console.log(err));
 	};
@@ -111,10 +129,13 @@ const List = ({ listId }) => {
 								</button>
 							</div>
 						}
-						classNameItems={'!fixed w-[280px]'}
+						classNameItems={'w-[280px]'}
 					/>
 
-					<TrashIcon className='w-6 h-6 p-1 hover:bg-gray-200 cursor-pointer rounded-md text-red-500' />
+					<TrashIcon
+						className='w-6 h-6 p-1 hover:bg-gray-200 cursor-pointer rounded-md text-red-500'
+						onClick={() => setOpenDelete(true)}
+					/>
 				</div>
 			</div>
 			{listInfo?.cards?.map((e) => (
@@ -157,6 +178,15 @@ const List = ({ listId }) => {
 					Thêm thẻ mới
 				</div>
 			)}
+			<ConfirmDialog
+				open={openDelete}
+				onClickNo={() => setOpenDelete(false)}
+				onClickYes={() => {
+					setOpenDelete(false);
+					onDeleteList();
+				}}
+				title={'Bạn chắc chắn muốn xoá danh sách này'}
+			/>
 		</div>
 	);
 };

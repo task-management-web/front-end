@@ -8,19 +8,45 @@ import { InformationCircleIcon } from '@heroicons/react/outline';
 import BoardDetail from '../../components/Layout/BoardDetail';
 import { useDispatch, useSelector } from 'react-redux';
 import { getBoard } from './../../actions/board';
+import { API } from '../../utils/api';
+import { toast } from 'react-toastify';
 
 const Board = () => {
 	const location = useLocation();
 	const boardId = location.pathname.split('/')[2];
 	const dispatch = useDispatch();
 	const boardInfo = useSelector((state) => state.board);
+	const moving = useSelector((state) => state.moving);
 	const [openDetail, setOpenDetail] = useState(false);
-	const [cardMoving, setCardMoving] = useState({});
-	const [listMoving, setListMoving] = useState({});
 
 	useEffect(() => {
 		dispatch(getBoard(boardId));
 	}, [boardId, dispatch]);
+
+	useEffect(() => {
+		if (moving.start && moving.end) {
+			if (moving.start.type === 'CARD') {
+				if (moving.start.listId === moving.end.listId) {
+					// console.log('b');
+
+					dispatch({ type: 'END' });
+					return;
+				} else {
+					API.put(`/card/movecardtonewlist/${moving.start.cardId}`, {
+						listId: moving.end.listId,
+					})
+						.then(() => {
+							dispatch(getBoard(boardId));
+							toast.success('Cập nhật vị trí thẻ thành công');
+						})
+						.catch(() => toast.error('Cập nhật vị trí thẻ thất bại'));
+					dispatch({ type: 'END' });
+					return;
+				}
+			}
+			dispatch({ type: 'END' });
+		}
+	}, [moving]);
 
 	return (
 		<div className='flex w-full overflow-auto'>

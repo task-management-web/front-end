@@ -18,7 +18,7 @@ export const addList = (data, next) => (dispatch) =>
 
 export const updateList = (id, data, next) => (dispatch) =>
 	new Promise((resolve, reject) => {
-		API.put(`/list/update?id=${id}`, data)
+		API.put(`/list/update/${id}`, data)
 			.then((res) => {
 				toast.success(res?.data?.message);
 				// next();
