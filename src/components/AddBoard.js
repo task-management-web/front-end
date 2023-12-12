@@ -7,7 +7,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
-import { addBoard, updateBoard } from '../actions/board';
+import { addBoard, getBoard, updateBoard } from '../actions/board';
 import { getAllBoards } from '../actions/boards';
 
 const Schema = yup.object().shape({
@@ -53,7 +53,10 @@ const AddBoard = ({ closeModal, type = 'ADD' }) => {
 			dispatch(addBoard(data, closeModal, () => dispatch(getAllBoards())));
 		else
 			dispatch(
-				updateBoard(board.id, data, closeModal, () => dispatch(getAllBoards()))
+				updateBoard(board.id, data, closeModal, () => {
+					dispatch(getAllBoards());
+					dispatch(getBoard(board.id));
+				})
 			);
 	};
 	return (
