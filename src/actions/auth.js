@@ -18,7 +18,7 @@ export const signIn = (data, navigate) => (dispatch) => {
 	API.post('/auth/login', data)
 		.then((res) => {
 			toast.success('Đăng nhập thành công');
-			navigate('/');
+			navigate('/home');
 			localStorage.setItem('token', res.data.token);
 		})
 		.catch((err) => {
@@ -39,13 +39,16 @@ export const getUserInfo = (next) => (dispatch) => {
 };
 
 export const logOut = (navigate) => (dispatch) => {
-	API.post('/users/logout')
-		.then((data) => {})
+	API.post('/auth/logout')
+		.then((data) => {
+			localStorage.removeItem('token');
+			navigate('/sign-in');
+		})
 		.catch((err) => {
+			localStorage.removeItem('token');
+			navigate('/sign-in');
 			// toast.error('Đăng xuất thất bại');
 		});
-	localStorage.removeItem('token');
-	navigate('/sign-in');
 };
 
 export const deleteUser = (navigate) => (dispatch) => {

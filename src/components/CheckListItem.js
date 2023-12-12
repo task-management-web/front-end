@@ -44,10 +44,17 @@ const CheckListItem = ({ itemInfo, getCardInfo }) => {
 				<div>
 					<Checkbox
 						className={'my-auto mr-2'}
-						// onChange={(ev) => {
-						// 	if (ev.target.checked) onAddLabelToCard(e.id);
-						// 	else onRemoveLabelToCard(e.id);
-						// }}
+						checked={itemInfo.checked}
+						onChange={(ev) => {
+							API.put(`/checklistitem/getstatus/${itemInfo.id}`, {
+								checklistItemId: itemInfo.id,
+								newCheckedStatus: ev.target.checked,
+							})
+								.then(() => {
+									getCardInfo();
+								})
+								.catch((err) => console.log(err));
+						}}
 					/>
 					{itemInfo.title}
 				</div>

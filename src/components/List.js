@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Card from './Card';
 import TextField from './base/TextField/TextField';
 import {
@@ -62,13 +62,18 @@ const List = ({ listId }) => {
 	const board = useSelector((state) => state.board);
 
 	const updateTitleList = () => {
-		dispatch(updateList(listId, { title: listTitle }));
+		dispatch(
+			updateList(listId, { title: listTitle }, () =>
+				dispatch(getBoard(boardId))
+			)
+		);
 	};
 
 	const getListInfo = useCallback(() => {
 		API.get(`/list/${listId}`)
 			.then((res) => setListInfo(res?.data))
 			.catch((err) => console.log(err));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [listId, board?.lists]);
 
 	const onAddCard = () => {
@@ -128,6 +133,7 @@ const List = ({ listId }) => {
 			}
 			dispatch({ type: 'END' });
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [moving]);
 
 	useEffect(() => {

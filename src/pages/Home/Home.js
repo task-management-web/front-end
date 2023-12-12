@@ -10,7 +10,7 @@ const Home = () => {
 	};
 	useEffect(() => {
 		changeBackground('#f9c5d5');
-	});
+	}, []);
 	return <div className='p-4'>Hãy chọn một bảng hoặc tạo một bảng mới</div>;
 };
 export default Home;

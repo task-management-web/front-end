@@ -12,6 +12,7 @@ import ManageAccount from './pages/ManageAccount/ManageAccount';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Home from './pages/Home/Home';
+import Loader from './pages/Loader';
 
 function App() {
 	return (
@@ -19,6 +20,10 @@ function App() {
 			<div className='App'>
 				<ToastContainer theme='colored' />
 				<Routes>
+					<Route
+						path='/'
+						element={<Loader />}
+					/>
 					<Route
 						path='/'
 						element={<Layout />}>
@@ -31,7 +36,7 @@ function App() {
 							element={<ManageAccount />}
 						/>
 						<Route
-							path=''
+							path='/home'
 							element={<Home />}
 						/>
 					</Route>

@@ -8,7 +8,7 @@ import { InformationCircleIcon } from '@heroicons/react/outline';
 import BoardDetail from '../../components/Layout/BoardDetail';
 import { useDispatch, useSelector } from 'react-redux';
 import { getBoard } from './../../actions/board';
-import { API } from '../../utils/api';
+// import { API } from '../../utils/api';
 
 const Board = () => {
 	const location = useLocation();
@@ -39,7 +39,7 @@ const Board = () => {
 	return (
 		<div className='flex w-full overflow-auto'>
 			<div className='overflow-auto w-full'>
-				<div className='bg-white bg-opacity-40 p-4 w-full'>
+				<div className='bg-white bg-opacity-40 p-4 w-full sticky left-0'>
 					<div className='text-lg font-bold text-gray-700 flex justify-between'>
 						{boardInfo.title}
 						{!openDetail && (

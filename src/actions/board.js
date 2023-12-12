@@ -51,7 +51,7 @@ export const closeBoard = (boardId, navigate, next) => (dispatch) => {
 	API.delete(`/boards/${boardId}`)
 		.then((data) => {
 			toast.success(data.data?.message);
-			navigate('/');
+			navigate('/home');
 			dispatch({ type: 'DELETE_BOARD', payload: {} });
 			changeBackground('#f9c5d5');
 			next();

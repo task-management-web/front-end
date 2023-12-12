@@ -1,7 +1,7 @@
 /** @format */
 
-import { ClockIcon, XIcon } from '@heroicons/react/outline';
-import React, { useEffect, useState } from 'react';
+import { CalendarIcon, XIcon } from '@heroicons/react/outline';
+import React, { useState } from 'react';
 import Popup from 'reactjs-popup';
 import CardDetail from './CardDetail';
 import { useDrag } from 'react-dnd';
@@ -36,14 +36,14 @@ const Card = ({ cardInfo, listId, getListInfo }) => {
 			<div
 				className={clsx(
 					'h-8 w-full rounded-t-md',
-					cardInfo.coverUrl ? '' : 'h-0'
+					!!cardInfo.coverUrl ? '' : 'hidden'
 				)}
 				style={{ backgroundColor: cardInfo.coverUrl }}></div>
 			<div className='px-2 py-1'>
 				{cardInfo?.title}
 				{(cardInfo.startDate || cardInfo.dueDate) && (
 					<div className='text-sm my-1 flex gap-2'>
-						<ClockIcon className='w-4 h-4 my-auto' />
+						<CalendarIcon className='w-4 h-4 my-auto' />
 						{cardInfo.startDate && !cardInfo.dueDate
 							? 'Bắt đầu: ' +
 							  new Date(cardInfo?.startDate).toLocaleDateString('vi') +
@@ -69,7 +69,7 @@ const Card = ({ cardInfo, listId, getListInfo }) => {
 					style={{ backgroundColor: cardInfo.coverUrl }}
 					className={clsx(
 						'h-[100px] w-full rounded-t-md',
-						cardInfo.coverUrl ? ' ' : 'h-0'
+						!!cardInfo.coverUrl ? '' : 'hidden'
 					)}></div>
 				<div className='flex justify-between gap-2 px-8 pt-6 pb-4'>
 					<span className='font-semibold'>Chi tiết thẻ</span>

@@ -13,10 +13,11 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { API } from '../utils/api';
 import {
+	CalendarIcon,
 	ClipboardListIcon,
-	ClockIcon,
 	CreditCardIcon,
 	PencilAltIcon,
+	PhotographIcon,
 	TagIcon,
 	TrashIcon,
 	XIcon,
@@ -125,7 +126,7 @@ const CardDetail = ({ cardId, closeModal, getListInfo }) => {
 			<div className='grid h-fit gap-1 col-span-4'>
 				{(cardDetail.startDate || cardDetail.dueDate) && (
 					<div className=' my-1 flex gap-2'>
-						<ClockIcon className='w-6 h-6 my-auto' />
+						<CalendarIcon className='w-6 h-6 my-auto' />
 						{cardDetail.startDate ? (
 							<>
 								<span className='italic'>Bắt đầu:</span>
@@ -291,7 +292,7 @@ const CardDetail = ({ cardId, closeModal, getListInfo }) => {
 						className='flex gap-4 mt-2'
 						key={e.id}>
 						<UserAvatar
-							userName={user.userName}
+							userName={board?.users?.find((el) => el.id === e.UserId).userName}
 							className={'!m-0'}
 						/>
 						{isEdit === `UPDATE_COMMENT_${e.id}` ? (
@@ -366,8 +367,13 @@ const CardDetail = ({ cardId, closeModal, getListInfo }) => {
 				<div className='text-sm font-semibold'>Thêm vào thẻ</div>
 				<DropDown
 					className={'w-full'}
-					classNameButton={'p-0 stroke-button w-full'}
-					buttonElement={<div>Nhãn</div>}
+					classNameButton={'!px-6 stroke-button w-full text-left'}
+					buttonElement={
+						<div className='flex gap-3'>
+							<TagIcon className='w-4 h-4 my-auto' />
+							Nhãn
+						</div>
+					}
 					itemsElement={
 						<AddLabel
 							getCardInfo={getCardInfo}
@@ -379,8 +385,13 @@ const CardDetail = ({ cardId, closeModal, getListInfo }) => {
 				/>
 				<DropDown
 					className={'w-full'}
-					classNameButton={'p-0 stroke-button w-full'}
-					buttonElement={<div>Ảnh bìa</div>}
+					classNameButton={'!px-6 stroke-button w-full text-left'}
+					buttonElement={
+						<div className='flex gap-3'>
+							<PhotographIcon className='w-4 h-4 my-auto' />
+							Ảnh bìa
+						</div>
+					}
 					itemsElement={
 						<AddCover
 							getCardInfo={getCardInfo}
@@ -393,8 +404,13 @@ const CardDetail = ({ cardId, closeModal, getListInfo }) => {
 				/>
 				<DropDown
 					className={'w-full'}
-					classNameButton={'p-0 stroke-button w-full'}
-					buttonElement={<div>Công việc</div>}
+					classNameButton={'!px-6 stroke-button w-full text-left'}
+					buttonElement={
+						<div className='flex gap-3'>
+							<ClipboardListIcon className='w-4 h-4 my-auto' />
+							Công việc
+						</div>
+					}
 					itemsElement={
 						<AddCheckList
 							getCardInfo={getCardInfo}
@@ -405,8 +421,13 @@ const CardDetail = ({ cardId, closeModal, getListInfo }) => {
 				/>
 				<DropDown
 					className={'w-full'}
-					classNameButton={'p-0 stroke-button w-full'}
-					buttonElement={<div>Ngày</div>}
+					classNameButton={'!px-6 stroke-button w-full text-left'}
+					buttonElement={
+						<div className='flex gap-3'>
+							<CalendarIcon className='w-4 h-4 my-auto' />
+							Ngày
+						</div>
+					}
 					itemsElement={
 						<AddDate
 							getCardInfo={getCardInfo}

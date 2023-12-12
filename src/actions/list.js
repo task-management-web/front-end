@@ -21,7 +21,7 @@ export const updateList = (id, data, next) => (dispatch) =>
 		API.put(`/list/update/${id}`, data)
 			.then((res) => {
 				toast.success(res?.data?.message);
-				// next();
+				next();
 			})
 			.catch((err) =>
 				toast.error(
