@@ -87,6 +87,29 @@ const List = ({ listId }) => {
 	};
 
 	useEffect(() => {
+		if (moving.start && moving.end) {
+			if (moving.start.type === 'CARD') {
+				if (moving.start.listId === moving.end.listId) {
+					dispatch({ type: 'END' });
+					return;
+				} else {
+					API.put(`/card/movecardtonewlist/${moving.start.cardId}`, {
+						listId: moving.end.listId,
+					})
+						.then(() => {
+							getListInfo();
+							// toast.success('Cập nhật vị trí thẻ thành công');
+						})
+						.catch(() => {});
+					dispatch({ type: 'END' });
+					return;
+				}
+			}
+			dispatch({ type: 'END' });
+		}
+	}, [moving]);
+
+	useEffect(() => {
 		getListInfo();
 	}, [listId, getListInfo]);
 
