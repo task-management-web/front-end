@@ -118,9 +118,6 @@ const CheckList = ({ getCardInfo, cardId, checkListInfo }) => {
 						hiddenHelperText
 						value={itemTitle}
 						onChange={(e) => setItemTitle(e.target.value)}
-						onKeyDown={(e) => {
-							if (e.key === 'Enter') onAddItems();
-						}}
 					/>
 					<div className='flex gap-2 mt-2'>
 						<button

@@ -162,8 +162,16 @@ const AddLabel = ({ getCardInfo, cardId, cardInfo }) => {
 								helperText={errors.title?.message}
 								value={field.value}
 								onChange={(e) => {
-									e.preventDefault();
 									field.onChange(e.target.value);
+								}}
+								onKeyDown={(e) => {
+									if (e.keyCode === 32) {
+										e.preventDefault();
+										field.onChange(field.value + ' ');
+									}
+									if (e.key === 'Enter') {
+										e.preventDefault();
+									}
 								}}
 								labelStyle={{ fontSize: 'small' }}
 							/>

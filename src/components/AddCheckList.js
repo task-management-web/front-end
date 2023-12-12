@@ -29,7 +29,13 @@ const AddCheckList = ({ getCardInfo, cardId }) => {
 				value={title}
 				onChange={(e) => setTitle(e.target.value)}
 				onKeyDown={(e) => {
-					if (e.key === 'Enter') onAddCheckList();
+					if (e.keyCode === 32) {
+						e.preventDefault();
+						setTitle(title + ' ');
+					}
+					if (e.key === 'Enter') {
+						onAddCheckList();
+					}
 				}}
 				hiddenHelperText
 				placeholder={'Nhập tiêu đề'}

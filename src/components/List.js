@@ -181,7 +181,14 @@ const List = ({ listId }) => {
 									value={listTitle}
 									onChange={(e) => setListTitle(e.target.value)}
 									onKeyDown={(e) => {
-										if (e.key === 'Enter') updateTitleList();
+										if (e.keyCode === 32) {
+											e.preventDefault();
+											setListTitle(listTitle + ' ');
+										}
+										if (e.key === 'Enter') {
+											// e.preventDefault();
+											updateTitleList();
+										}
 									}}
 								/>
 								<button
